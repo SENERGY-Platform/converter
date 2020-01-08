@@ -16,6 +16,24 @@
 
 package main
 
-func main() {
+import (
+	"context"
+	"github.com/SENERGY-Platform/converter-service/lib/api"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
+)
 
+func main() {
+	srv, err := api.Start("8080")
+	if err != nil {
+		log.Fatal("ERROR: unable to start api", err)
+	}
+
+	shutdown := make(chan os.Signal, 1)
+	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
+	sig := <-shutdown
+	log.Println("received shutdown signal", sig)
+	log.Println(srv.Shutdown(context.Background()))
 }
