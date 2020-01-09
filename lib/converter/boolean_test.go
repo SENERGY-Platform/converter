@@ -17,7 +17,7 @@
 package converter
 
 import (
-	"github.com/SENERGY-Platform/converter-service/lib/converter/binary"
+	"github.com/SENERGY-Platform/converter/lib/converter/binary"
 	"testing"
 )
 

@@ -18,7 +18,7 @@ package main
 
 import (
 	"context"
-	"github.com/SENERGY-Platform/converter-service/lib/api"
+	"github.com/SENERGY-Platform/converter/lib/api"
 	"log"
 	"os"
 	"os/signal"

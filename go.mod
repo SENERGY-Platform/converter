@@ -1,4 +1,4 @@
-module github.com/SENERGY-Platform/converter-service
+module github.com/SENERGY-Platform/converter
 
 go 1.13
 

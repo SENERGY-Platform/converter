@@ -17,8 +17,8 @@
 package temperature
 
 import (
-	"github.com/SENERGY-Platform/converter-service/lib/converter/base"
-	"github.com/SENERGY-Platform/converter-service/lib/model"
+	"github.com/SENERGY-Platform/converter/lib/converter/base"
+	"github.com/SENERGY-Platform/converter/lib/model"
 )
 
 var characteristicToConcept = &base.CastCharacteristicToConcept{}

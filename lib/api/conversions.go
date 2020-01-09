@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/SENERGY-Platform/converter-service/lib/converter"
+	"github.com/SENERGY-Platform/converter/lib/converter"
 	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"

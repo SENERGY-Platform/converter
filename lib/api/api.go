@@ -17,7 +17,7 @@
 package api
 
 import (
-	"github.com/SENERGY-Platform/converter-service/lib/api/util"
+	"github.com/SENERGY-Platform/converter/lib/api/util"
 	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"

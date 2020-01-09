@@ -18,7 +18,7 @@ package color
 
 import (
 	"errors"
-	"github.com/SENERGY-Platform/converter-service/lib/converter/base"
+	"github.com/SENERGY-Platform/converter/lib/converter/base"
 	"gopkg.in/go-playground/colors.v1"
 	"log"
 	"runtime/debug"

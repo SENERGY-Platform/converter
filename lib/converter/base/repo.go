@@ -18,7 +18,7 @@ package base
 
 import (
 	"errors"
-	"github.com/SENERGY-Platform/converter-service/lib/model"
+	"github.com/SENERGY-Platform/converter/lib/model"
 	"runtime/debug"
 	"sync"
 )

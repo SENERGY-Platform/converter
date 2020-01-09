@@ -2,7 +2,7 @@ package api
 
 import (
 	"fmt"
-	"github.com/SENERGY-Platform/converter-service/lib/converter/color"
+	"github.com/SENERGY-Platform/converter/lib/converter/color"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
