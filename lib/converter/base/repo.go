@@ -36,8 +36,8 @@ type ConceptRepoType struct {
 var ConceptRepo = &ConceptRepoType{
 	concepts:                           map[string]model.Concept{model.NullConcept.Id: model.NullConcept},
 	characteristics:                    map[string]model.Characteristic{model.NullCharacteristic.Id: model.NullCharacteristic},
-	conceptByCharacteristic:            map[string]model.Concept{},
-	rootCharacteristicByCharacteristic: map[string]model.Characteristic{},
+	conceptByCharacteristic:            map[string]model.Concept{model.NullCharacteristic.Id: model.NullConcept},
+	rootCharacteristicByCharacteristic: map[string]model.Characteristic{model.NullCharacteristic.Id: model.NullCharacteristic},
 }
 
 func (this *ConceptRepoType) Register(concept model.Concept, characteristics []model.Characteristic) {
