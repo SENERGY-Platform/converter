@@ -9,10 +9,10 @@ import (
 )
 
 func init() {
-	endpoints = append(endpoints, ConvertionsEndpoint)
+	endpoints = append(endpoints, ConversionsEndpoint)
 }
 
-func ConvertionsEndpoint(router *httprouter.Router) {
+func ConversionsEndpoint(router *httprouter.Router) {
 	resource := "/conversions"
 
 	router.GET(resource+"/:from/:to", func(writer http.ResponseWriter, request *http.Request, ps httprouter.Params) {
