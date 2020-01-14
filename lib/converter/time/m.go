@@ -50,7 +50,7 @@ func init() {
 
 	characteristicToConcept.Set(MinutesId, func(in interface{}) (concept interface{}, err error) {
 		var minutesAsFloat float64
-		switch ms := concept.(type) {
+		switch ms := in.(type) {
 		case int:
 			minutesAsFloat = float64(ms)
 		case int32:
