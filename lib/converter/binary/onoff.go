@@ -43,7 +43,7 @@ func init() {
 	characteristicToConcept.Set(OnOff, func(in interface{}) (concept interface{}, err error) {
 		switch v := in.(type) {
 		case string:
-			if v == "on" {
+			if v == "on" || v == "ON" {
 				return true, nil
 			} else {
 				return false, nil
