@@ -29,6 +29,7 @@ import (
 	_ "github.com/SENERGY-Platform/converter/lib/converter/luminiscence"
 	_ "github.com/SENERGY-Platform/converter/lib/converter/particleamount"
 	_ "github.com/SENERGY-Platform/converter/lib/converter/power"
+	_ "github.com/SENERGY-Platform/converter/lib/converter/pressure"
 	_ "github.com/SENERGY-Platform/converter/lib/converter/speedlevel"
 	_ "github.com/SENERGY-Platform/converter/lib/converter/temperature"
 	_ "github.com/SENERGY-Platform/converter/lib/converter/time"
