@@ -23,6 +23,7 @@ import (
 	_ "github.com/SENERGY-Platform/converter/lib/converter/binary"
 	_ "github.com/SENERGY-Platform/converter/lib/converter/brightness"
 	_ "github.com/SENERGY-Platform/converter/lib/converter/color"
+	_ "github.com/SENERGY-Platform/converter/lib/converter/contact"
 	_ "github.com/SENERGY-Platform/converter/lib/converter/energy"
 	_ "github.com/SENERGY-Platform/converter/lib/converter/example"
 	_ "github.com/SENERGY-Platform/converter/lib/converter/humidity"
