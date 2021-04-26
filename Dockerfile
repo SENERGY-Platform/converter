@@ -15,7 +15,6 @@ WORKDIR /root/
 COPY --from=builder /go/src/app/app .
 COPY --from=builder /go/src/app/converter.so .
 COPY --from=builder /go/src/app/converter.h .
-COPY --from=builder /go/src/app/cmd/sharedlib/converter.py .
 COPY --from=builder /go/src/app/version.txt .
 
 EXPOSE 8080
