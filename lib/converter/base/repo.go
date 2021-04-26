@@ -99,6 +99,13 @@ func (this *ConceptRepoType) GetCharacteristic(id string) (characteristic model.
 	return characteristic, nil
 }
 
+func (this *ConceptRepoType) GetCharacteristicList() (characteristics []model.Characteristic) {
+	for _, c := range this.characteristics {
+		characteristics = append(characteristics, c)
+	}
+	return
+}
+
 func (this *ConceptRepoType) GetRootCharacteristics(ids []string) (result []string) {
 	this.mux.Lock()
 	defer this.mux.Unlock()

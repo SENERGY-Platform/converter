@@ -1,3 +1,9 @@
 .idea
 converter-service
 /converter
+/cmd/rest/rest
+/cmd/sharedlib/sharedlib
+sharedlib.so
+sharedlib.h
+converter.so
+converter.h
