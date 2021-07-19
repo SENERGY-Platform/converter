@@ -42,6 +42,9 @@ import (
 var ConceptRepo = base.ConceptRepo
 
 func Cast(in interface{}, from string, to string) (out interface{}, err error) {
+	if from == to {
+		return in, nil
+	}
 	fromConceptId, err := base.ConceptRepo.GetConceptOfCharacteristic(from)
 	if err != nil {
 		return nil, err
