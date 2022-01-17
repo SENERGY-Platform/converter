@@ -44,5 +44,10 @@ func init() {
 			Name: "on/off",
 			Type: model.String,
 		},
+		{
+			Id:   AnyClear,
+			Name: "any_clear",
+			Type: model.String,
+		},
 	})
 }
