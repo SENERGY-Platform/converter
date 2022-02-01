@@ -1,6 +1,6 @@
 module github.com/SENERGY-Platform/converter
 
-go 1.13
+go 1.17
 
 require (
 	github.com/julienschmidt/httprouter v1.3.0
