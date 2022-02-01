@@ -34,6 +34,7 @@ import (
 	_ "github.com/SENERGY-Platform/converter/lib/converter/speedlevel"
 	_ "github.com/SENERGY-Platform/converter/lib/converter/temperature"
 	_ "github.com/SENERGY-Platform/converter/lib/converter/time"
+	_ "github.com/SENERGY-Platform/converter/lib/converter/timestamp"
 	_ "github.com/SENERGY-Platform/converter/lib/converter/ultraviolet"
 	"github.com/SENERGY-Platform/converter/lib/model"
 	"runtime/debug"
