@@ -7,3 +7,8 @@ require (
 	github.com/lucasb-eyer/go-colorful v1.0.3
 	gopkg.in/go-playground/colors.v1 v1.2.0
 )
+
+require (
+	github.com/RyanCarrier/dijkstra v1.1.0 // indirect
+	github.com/emicklei/dot v0.16.0 // indirect
+)
