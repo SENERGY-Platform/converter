@@ -19,6 +19,7 @@ package main
 import (
 	"context"
 	"github.com/SENERGY-Platform/converter/lib/api"
+	"github.com/SENERGY-Platform/converter/lib/converter"
 	"log"
 	"os"
 	"os/signal"
@@ -26,7 +27,11 @@ import (
 )
 
 func main() {
-	srv, err := api.Start("8080")
+	c, err := converter.New()
+	if err != nil {
+		log.Fatal("ERROR: unable to load converter", err)
+	}
+	srv, err := api.Start("8080", c)
 	if err != nil {
 		log.Fatal("ERROR: unable to start api", err)
 	}

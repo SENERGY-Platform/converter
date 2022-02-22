@@ -18,7 +18,8 @@ package api
 
 import (
 	"fmt"
-	"github.com/SENERGY-Platform/converter/lib/converter/color"
+	"github.com/SENERGY-Platform/converter/lib/converter"
+	"github.com/SENERGY-Platform/converter/lib/converter/characteristics"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -27,12 +28,17 @@ import (
 )
 
 func ExampleConvertWithGetRequest() {
-	server := httptest.NewServer(GetRouter())
+	c, err := converter.New()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	server := httptest.NewServer(GetRouter(c))
 	defer server.Close()
 
 	//hex to rgb
 	hex := `"#ff00ff"`
-	resp, err := http.Get(server.URL + "/conversions/" + url.PathEscape(color.Hex) + "/" + url.PathEscape(color.Rgb) + "?json=" + url.QueryEscape(hex))
+	resp, err := http.Get(server.URL + "/conversions/" + url.PathEscape(characteristics.Hex) + "/" + url.PathEscape(characteristics.Rgb) + "?json=" + url.QueryEscape(hex))
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -50,12 +56,17 @@ func ExampleConvertWithGetRequest() {
 }
 
 func ExampleConvertWithPostRequest() {
-	server := httptest.NewServer(GetRouter())
+	c, err := converter.New()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	server := httptest.NewServer(GetRouter(c))
 	defer server.Close()
 
 	//rgb to hex
 	rgb := `{"b":255,"g":0,"r":255}`
-	resp, err := http.Post(server.URL+"/conversions/"+url.PathEscape(color.Rgb)+"/"+url.PathEscape(color.Hex), "application/json", strings.NewReader(rgb))
+	resp, err := http.Post(server.URL+"/conversions/"+url.PathEscape(characteristics.Rgb)+"/"+url.PathEscape(characteristics.Hex), "application/json", strings.NewReader(rgb))
 	if err != nil {
 		fmt.Println(err)
 		return

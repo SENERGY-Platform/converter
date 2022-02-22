@@ -18,6 +18,7 @@ package api
 
 import (
 	"github.com/SENERGY-Platform/converter/lib/api/util"
+	"github.com/SENERGY-Platform/converter/lib/converter"
 	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
@@ -25,11 +26,11 @@ import (
 	"runtime"
 )
 
-var endpoints = []func(router *httprouter.Router){}
+var endpoints = []func(router *httprouter.Router, converter *converter.Converter){}
 
-func Start(port string) (srv *http.Server, err error) {
+func Start(port string, converter *converter.Converter) (srv *http.Server, err error) {
 	log.Println("start api")
-	router := GetRouter()
+	router := GetRouter(converter)
 	log.Println("add logging and cors")
 	corsHandler := util.NewCors(router)
 	logger := util.NewLogger(corsHandler)
@@ -39,11 +40,11 @@ func Start(port string) (srv *http.Server, err error) {
 	return srv, nil
 }
 
-func GetRouter() (router *httprouter.Router) {
+func GetRouter(converter *converter.Converter) (router *httprouter.Router) {
 	router = httprouter.New()
 	for _, e := range endpoints {
 		log.Println("add endpoints: " + runtime.FuncForPC(reflect.ValueOf(e).Pointer()).Name())
-		e(router)
+		e(router, converter)
 	}
 	return
 }

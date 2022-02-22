@@ -14,7 +14,7 @@
 
 __version__ = '0.1.0'
 __title__ = 'converter'
-__description__ = 'library to use the shared lib ot the converter.'
+__description__ = 'python wrapper to use the converter shared lib.'
 __url__ = 'https://github.com/SENERGY-Platform/converter/cmd/python'
 __author__ = 'Ingo Rößner'
 __license__ = 'Apache License 2.0'
@@ -29,8 +29,6 @@ class Converter:
         self.lib = cdll.LoadLibrary(lib_location)
         self.lib.Cast.argtypes = [c_char_p, c_char_p, c_char_p]
         self.lib.Cast.restype = c_char_p
-        self.lib.ListCharacteristics.argtypes = []
-        self.lib.ListCharacteristics.restype = c_char_p
 
     def cast(self, value, from_characteristic, to_characteristic):
         json_value = json.dumps(value, ensure_ascii=False)
@@ -39,7 +37,3 @@ class Converter:
         to_c = c_char_p(to_characteristic.encode('utf-8'))
         out_json = self.lib.Cast(json_value_c, from_c, to_c)
         return json.loads(out_json)
-
-    def list_characteristics(self):
-        result = self.lib.ListCharacteristics()
-        return json.loads(result)

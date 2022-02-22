@@ -28,7 +28,7 @@ func init() {
 	endpoints = append(endpoints, ConversionsEndpoint)
 }
 
-func ConversionsEndpoint(router *httprouter.Router) {
+func ConversionsEndpoint(router *httprouter.Router, converter *converter.Converter) {
 	resource := "/conversions"
 
 	router.GET(resource+"/:from/:to", func(writer http.ResponseWriter, request *http.Request, ps httprouter.Params) {

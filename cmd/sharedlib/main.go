@@ -21,13 +21,25 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/SENERGY-Platform/converter/lib/converter"
-	"github.com/SENERGY-Platform/converter/lib/converter/base"
-	"log"
+	"sync"
 )
 
 type CastResult struct {
 	Err    string      `json:"err,omitempty"`
 	Result interface{} `json:"result,omitempty"`
+}
+
+var globalConverter *converter.Converter
+var converterStartupErr error
+var startupOnce = sync.Once{}
+
+func getConverter() (*converter.Converter, error) {
+	get := func() {
+		globalConverter, converterStartupErr = converter.New()
+	}
+	startupOnce.Do(get)
+
+	return globalConverter, converterStartupErr
 }
 
 func getMarshaledCastResult(result interface{}, err error) *C.char {
@@ -50,19 +62,12 @@ func Cast(inJson *C.char, from *C.char, to *C.char) (resultJson *C.char) {
 	if err != nil {
 		return getMarshaledCastResult(nil, err)
 	}
-	result, err := converter.Cast(in, C.GoString(from), C.GoString(to))
-	return getMarshaledCastResult(result, err)
-}
-
-//export ListCharacteristics
-func ListCharacteristics() (resultJson *C.char) {
-	list := base.ConceptRepo.GetCharacteristicList()
-	temp, err := json.Marshal(list)
+	conv, err := getConverter()
 	if err != nil {
-		log.Println("ERROR:", err)
-		return C.CString("")
+		return getMarshaledCastResult(nil, err)
 	}
-	return C.CString(string(temp))
+	result, err := conv.Cast(in, C.GoString(from), C.GoString(to))
+	return getMarshaledCastResult(result, err)
 }
 
 func main() {}
