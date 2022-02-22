@@ -99,6 +99,7 @@ func (this *GraphRegister) path(from CharacteristicId, to CharacteristicId) (pat
 				return path, err
 			}
 			prev = element.To
+			path = append(path, element)
 		} else {
 			prev, err = this.graph.GetMapped(idElement)
 			if err != nil {

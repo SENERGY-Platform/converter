@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 InfAI (CC SES)
+ * Copyright 2019 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package register
+package characteristics
 
-const NoLosses int64 = 0
-const RoundingLoss int64 = 1
-const MajorLoss int64 = 20
+import "github.com/SENERGY-Platform/converter/lib/converterV2/register"
+
+const UvIndex = "urn:infai:ses:characteristic:0a61343d-c0d1-4af8-9329-3829c30ba59f"
+const UvIndexName = "uv index"
+
+func init() {
+	register.Labels[UvIndex] = UvIndexName
+}

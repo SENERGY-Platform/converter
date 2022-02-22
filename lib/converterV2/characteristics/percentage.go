@@ -18,6 +18,7 @@ package characteristics
 
 import "github.com/SENERGY-Platform/converter/lib/converterV2/register"
 
+//TODO: replace with selected percentage id (old version uses multiple different percentages, the new version only this one)
 const Percentage = "urn:infai:ses:characteristic:5caa707d-dc08-4f3b-bd9f-f08935c8dd3c"
 
 func init() {

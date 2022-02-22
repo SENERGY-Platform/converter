@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 InfAI (CC SES)
+ * Copyright 2019 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package register
+package characteristics
 
-const NoLosses int64 = 0
-const RoundingLoss int64 = 1
-const MajorLoss int64 = 20
+import "github.com/SENERGY-Platform/converter/lib/converterV2/register"
+
+const Kwh = "urn:infai:ses:characteristic:3febed55-ba9b-43dc-8709-9c73bae3716e"
+const KwhName = "kwh"
+
+func init() {
+	register.Labels[Kwh] = KwhName
+}

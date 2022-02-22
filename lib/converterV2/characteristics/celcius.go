@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 InfAI (CC SES)
+ * Copyright 2019 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package register
+package characteristics
 
-const NoLosses int64 = 0
-const RoundingLoss int64 = 1
-const MajorLoss int64 = 20
+import "github.com/SENERGY-Platform/converter/lib/converterV2/register"
+
+const Celcius = "urn:infai:ses:characteristic:5ba31623-0ccb-4488-bfb7-f73b50e03b5a"
+
+func init() {
+	register.Labels[Celcius] = "°C"
+}

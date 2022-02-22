@@ -32,6 +32,9 @@ func main() {
 
 func ExportDotGraph(registry []register.Entry, labels map[string]string) {
 	g := dot.NewGraph(dot.Directed)
+	for id, label := range labels {
+		g.Node(id).Label(label)
+	}
 	for _, e := range registry {
 		fromNode := g.Node(e.From)
 		if l, ok := labels[e.From]; ok {

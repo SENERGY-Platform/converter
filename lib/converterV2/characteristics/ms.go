@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 InfAI (CC SES)
+ * Copyright 2019 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package register
+package characteristics
 
-const NoLosses int64 = 0
-const RoundingLoss int64 = 1
-const MajorLoss int64 = 20
+import "github.com/SENERGY-Platform/converter/lib/converterV2/register"
+
+const MilliSeconds = "urn:infai:ses:characteristic:182e6bb4-8622-453a-9a4d-bfa9c70d6c9c"
+const MilliSecondsName = "millisecond"
+
+func init() {
+	register.Labels[MilliSeconds] = MilliSecondsName
+}

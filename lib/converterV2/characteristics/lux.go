@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 InfAI (CC SES)
+ * Copyright 2019 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,13 @@
  * limitations under the License.
  */
 
-package register
+package characteristics
 
-const NoLosses int64 = 0
-const RoundingLoss int64 = 1
-const MajorLoss int64 = 20
+import "github.com/SENERGY-Platform/converter/lib/converterV2/register"
+
+const Lux = "urn:infai:ses:characteristic:0419856b-d198-480e-9998-bf990f226844"
+const LuxName = "lux"
+
+func init() {
+	register.Labels[Lux] = LuxName
+}
