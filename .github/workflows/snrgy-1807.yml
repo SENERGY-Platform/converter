@@ -1,4 +1,4 @@
-name: 'DEV Docker Image'
+name: 'SNRGY-1807 Docker Image'
 
 on:
   push:
