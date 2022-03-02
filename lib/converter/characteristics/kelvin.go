@@ -29,7 +29,7 @@ const Kelvin = "urn:infai:ses:characteristic:75b2d113-1d03-4ef8-977a-8dbcbb31a68
 func init() {
 	register.Labels[Kelvin] = "Kelvin"
 
-	register.Add(Celcius, Kelvin, register.NoLosses, func(in interface{}) (out interface{}, err error) {
+	register.Add(Celsius, Kelvin, register.NoLosses, func(in interface{}) (out interface{}, err error) {
 		switch celcius := in.(type) {
 		case int:
 			return celcius + 273, nil
@@ -48,7 +48,7 @@ func init() {
 		}
 	})
 
-	register.Add(Kelvin, Celcius, register.NoLosses, func(in interface{}) (out interface{}, err error) {
+	register.Add(Kelvin, Celsius, register.NoLosses, func(in interface{}) (out interface{}, err error) {
 		switch kelvin := in.(type) {
 		case int:
 			return kelvin - 273, nil

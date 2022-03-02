@@ -18,8 +18,8 @@ package characteristics
 
 import "github.com/SENERGY-Platform/converter/lib/converter/register"
 
-const Celcius = "urn:infai:ses:characteristic:5ba31623-0ccb-4488-bfb7-f73b50e03b5a"
+const Celsius = "urn:infai:ses:characteristic:5ba31623-0ccb-4488-bfb7-f73b50e03b5a"
 
 func init() {
-	register.Labels[Celcius] = "°C"
+	register.Labels[Celsius] = "°C"
 }
