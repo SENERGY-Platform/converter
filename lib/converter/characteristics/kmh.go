@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 InfAI (CC SES)
+ * Copyright 2022 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,54 +24,52 @@ import (
 	"runtime/debug"
 )
 
-const Lux = "urn:infai:ses:characteristic:0419856b-d198-480e-9998-bf990f226844"
-const LuxName = "lux"
+const Kmh = "urn:infai:ses:characteristic:becfc22a-7f24-44df-9a46-45acebc56d00"
+const KmhName = "km/h"
 
 func init() {
-	register.Labels[Lux] = LuxName
+	register.Labels[Kmh] = KmhName
 
-	register.Add(Lux, WattPerSquareMeter, register.MajorLoss, func(in interface{}) (out interface{}, err error) {
-		//https://ambientweather.com/faqs/question/view/id/1452/
-		var luxAsFloat float64
-		switch lux := in.(type) {
+	register.Add(MetersPerSecond, Kmh, register.RoundingLoss, func(in interface{}) (out interface{}, err error) {
+		var msAsFloat float64
+		switch ms := in.(type) {
 		case int:
-			luxAsFloat = float64(lux)
+			msAsFloat = float64(ms)
 		case int32:
-			luxAsFloat = float64(lux)
+			msAsFloat = float64(ms)
 		case int64:
-			luxAsFloat = float64(lux)
+			msAsFloat = float64(ms)
 		case float32:
-			luxAsFloat = float64(lux)
+			msAsFloat = float64(ms)
 		case float64:
-			luxAsFloat = lux
+			msAsFloat = ms
 		default:
 			debug.PrintStack()
 			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
 			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
 		}
-		return luxAsFloat / 126.7, nil
+		return msAsFloat * 3.6, nil
 	})
 
-	register.Add(WattPerSquareMeter, Lux, register.MajorLoss, func(in interface{}) (out interface{}, err error) {
-		//https://ambientweather.com/faqs/question/view/id/1452/
-		var wAsFloat float64
-		switch w := in.(type) {
+	register.Add(Kmh, MetersPerSecond, register.NoLosses, func(in interface{}) (out interface{}, err error) {
+		var kmhAsFloat float64
+		switch kmh := in.(type) {
 		case int:
-			wAsFloat = float64(w)
+			kmhAsFloat = float64(kmh)
 		case int32:
-			wAsFloat = float64(w)
+			kmhAsFloat = float64(kmh)
 		case int64:
-			wAsFloat = float64(w)
+			kmhAsFloat = float64(kmh)
 		case float32:
-			wAsFloat = float64(w)
+			kmhAsFloat = float64(kmh)
 		case float64:
-			wAsFloat = w
+			kmhAsFloat = kmh
 		default:
 			debug.PrintStack()
 			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
 			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
 		}
-		return wAsFloat * 126.7, nil
+		return kmhAsFloat / 3.6, nil
 	})
 
 }

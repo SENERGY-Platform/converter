@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 InfAI (CC SES)
+ * Copyright 2022 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,9 @@ package characteristics
 
 import "github.com/SENERGY-Platform/converter/lib/converter/register"
 
-const MilliSeconds = "urn:infai:ses:characteristic:182e6bb4-8622-453a-9a4d-bfa9c70d6c9c"
-const MilliSecondsName = "millisecond"
-
-const MetersPerSecond = "urn:infai:ses:characteristic:04bce19c-839d-45de-8cfb-bd470715f4cd"
-const MetersPerSecondName = "m/s"
+const WattPerSquareMeter = "urn:infai:ses:characteristic:a03ef4d9-cee5-4c4c-b797-e813db59dde5"
+const WattPerSquareMeterName = "w/m²"
 
 func init() {
-	register.Labels[MilliSeconds] = MilliSecondsName
-
-	register.Labels[MetersPerSecond] = MetersPerSecondName
+	register.Labels[WattPerSquareMeter] = WattPerSquareMeterName
 }

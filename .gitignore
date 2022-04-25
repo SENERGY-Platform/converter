@@ -7,3 +7,4 @@ sharedlib.so
 sharedlib.h
 converter.so
 converter.h
+lib/converter/tests/testdata
