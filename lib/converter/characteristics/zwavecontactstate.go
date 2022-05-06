@@ -29,7 +29,7 @@ const ZwaveContactState = "urn:infai:ses:characteristic:65e9a5db-348f-4888-9d95-
 func init() {
 	register.Labels[ZwaveContactState] = "ZwaveContactState"
 
-	register.Add(ContactState, ZwaveContactState, register.NoLosses, func(in interface{}) (out interface{}, err error) {
+	register.Add(Boolean, ZwaveContactState, register.NoLosses, func(in interface{}) (out interface{}, err error) {
 		switch state := in.(type) {
 		case bool:
 			if state {
@@ -44,7 +44,7 @@ func init() {
 		}
 	})
 
-	register.Add(ZwaveContactState, ContactState, register.NoLosses, func(in interface{}) (out interface{}, err error) {
+	register.Add(ZwaveContactState, Boolean, register.NoLosses, func(in interface{}) (out interface{}, err error) {
 		switch state := in.(type) {
 		case string:
 			switch state {
@@ -55,7 +55,7 @@ func init() {
 			case "Clear":
 				return false, nil
 			default:
-				return "", errors.New("unable to convert '" + state + "' to generic opening state")
+				return false, errors.New("unable to convert '" + state + "' to bool")
 			}
 		default:
 			debug.PrintStack()
