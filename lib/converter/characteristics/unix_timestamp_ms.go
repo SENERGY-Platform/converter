@@ -72,4 +72,32 @@ func init() {
 		}
 		return time.UnixMilli(milliseconds).Format(time.RFC3339), nil
 	})
+
+	register.Add(UnixMilliSeconds, UnixNanoSeconds, register.NoLosses, func(in interface{}) (out interface{}, err error) {
+		var milliseconds int64
+		switch s := in.(type) {
+		case int:
+			milliseconds = int64(s)
+		case int32:
+			milliseconds = int64(s)
+		case int64:
+			milliseconds = s
+		case float32:
+			milliseconds = int64(s)
+		case float64:
+			milliseconds = int64(s)
+		case string:
+			milliseconds, err = strconv.ParseInt(s, 10, 64)
+			if err != nil {
+				debug.PrintStack()
+				log.Println("ERROR: ", err)
+				return nil, err
+			}
+		default:
+			debug.PrintStack()
+			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
+			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
+		}
+		return milliseconds * 1000000, nil
+	})
 }

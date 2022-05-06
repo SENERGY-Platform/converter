@@ -74,4 +74,32 @@ func init() {
 		return time.Unix(seconds, 0).Format(time.RFC3339), nil
 	})
 
+	register.Add(UnixSeconds, UnixMilliSeconds, register.NoLosses, func(in interface{}) (out interface{}, err error) {
+		var seconds int64
+		switch s := in.(type) {
+		case int:
+			seconds = int64(s)
+		case int32:
+			seconds = int64(s)
+		case int64:
+			seconds = s
+		case float32:
+			seconds = int64(s)
+		case float64:
+			seconds = int64(s)
+		case string:
+			seconds, err = strconv.ParseInt(s, 10, 64)
+			if err != nil {
+				debug.PrintStack()
+				log.Println("ERROR: ", err)
+				return nil, err
+			}
+		default:
+			debug.PrintStack()
+			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
+			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
+		}
+		return seconds * 1000, nil
+	})
+
 }
