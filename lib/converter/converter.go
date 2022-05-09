@@ -16,7 +16,11 @@
 
 package converter
 
-import "github.com/SENERGY-Platform/converter/lib/converter/register"
+import (
+	"errors"
+	"fmt"
+	"github.com/SENERGY-Platform/converter/lib/converter/register"
+)
 import _ "github.com/SENERGY-Platform/converter/lib/converter/characteristics"
 
 type Converter struct {
@@ -36,6 +40,11 @@ func NewFromRegister(register register.Register) (converter *Converter) {
 }
 
 func (this *Converter) Cast(in interface{}, from string, to string) (out interface{}, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("recovered panic: " + fmt.Sprint(r))
+		}
+	}()
 	if from == to {
 		return in, nil
 	}

@@ -43,6 +43,7 @@ func ConversionsEndpoint(router *httprouter.Router, converter *converter.Convert
 		}
 		out, err := converter.Cast(in, from, to)
 		if err != nil {
+			log.Println("ERROR:", err.Error(), "\n", from, to, in)
 			http.Error(writer, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -64,6 +65,7 @@ func ConversionsEndpoint(router *httprouter.Router, converter *converter.Convert
 		}
 		out, err := converter.Cast(in, from, to)
 		if err != nil {
+			log.Println("ERROR:", err.Error(), "\n", from, to, in)
 			http.Error(writer, err.Error(), http.StatusBadRequest)
 			return
 		}
