@@ -48,6 +48,9 @@ func (this *Converter) Cast(in interface{}, from string, to string) (out interfa
 	if from == to {
 		return in, nil
 	}
+	if in == nil {
+		return nil, nil
+	}
 
 	casts, err := this.register.GetCasts(from, to)
 	if err != nil {
