@@ -19,7 +19,9 @@ package converter
 import (
 	"errors"
 	"fmt"
+	"github.com/Knetic/govaluate"
 	"github.com/SENERGY-Platform/converter/lib/converter/register"
+	"github.com/SENERGY-Platform/converter/lib/model"
 )
 import _ "github.com/SENERGY-Platform/converter/lib/converter/characteristics"
 
@@ -28,7 +30,11 @@ type Converter struct {
 }
 
 func New() (converter *Converter, err error) {
-	r, err := register.NewGraphRegister(register.List)
+	return NewFromRegisterEntries(register.List)
+}
+
+func NewFromRegisterEntries(entries []register.Entry) (converter *Converter, err error) {
+	r, err := register.NewGraphRegister(entries)
 	if err != nil {
 		return converter, err
 	}
@@ -37,6 +43,10 @@ func New() (converter *Converter, err error) {
 
 func NewFromRegister(register register.Register) (converter *Converter) {
 	return &Converter{register: register}
+}
+
+func (this *Converter) UpdateRegister(castDescriptions []register.Entry) (err error) {
+	return this.register.Update(append(register.List, castDescriptions...))
 }
 
 func (this *Converter) Cast(in interface{}, from string, to string) (out interface{}, err error) {
@@ -65,4 +75,36 @@ func (this *Converter) Cast(in interface{}, from string, to string) (out interfa
 		}
 	}
 	return out, nil
+}
+
+func (this *Converter) CastWithExtension(in interface{}, from string, to string, extensions []model.ConverterExtension) (out interface{}, err error) {
+	rules := []register.Entry{}
+	rules = append(rules, register.List...)
+	for _, ruleDesc := range extensions {
+		rules = append(rules, register.Entry{
+			From:     ruleDesc.From,
+			To:       ruleDesc.To,
+			Distance: ruleDesc.Distance,
+			Cast:     getExtensionCastFunction(ruleDesc),
+		})
+	}
+	tempConverter, err := NewFromRegisterEntries(rules)
+	if err != nil {
+		return out, fmt.Errorf("unable to create extended converter: %v", err)
+	}
+	return tempConverter.Cast(in, from, to)
+}
+
+func getExtensionCastFunction(desc model.ConverterExtension) register.CastFunction {
+	return func(in interface{}) (out interface{}, err error) {
+		expression, err := govaluate.NewEvaluableExpression(desc.F)
+		if err != nil {
+			return out, fmt.Errorf("unable to parse extension expression (%v): %v", desc.F, err)
+		}
+		out, err = expression.Evaluate(map[string]interface{}{desc.PlaceholderName: in})
+		if err != nil {
+			return out, fmt.Errorf("unable to evaluate extension expression (%v) with input (%v = %v): %v", desc.F, desc.PlaceholderName, in, err)
+		}
+		return out, nil
+	}
 }

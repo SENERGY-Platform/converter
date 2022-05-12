@@ -17,6 +17,8 @@
 package api
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/SENERGY-Platform/converter/lib/converter"
 	"github.com/SENERGY-Platform/converter/lib/converter/characteristics"
@@ -81,4 +83,96 @@ func ExampleConvertWithPostRequest() {
 
 	//output:
 	//"#ff00ff"
+}
+
+func ExamplePureExtension() {
+	c, err := converter.New()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	server := httptest.NewServer(GetRouter(c))
+	defer server.Close()
+
+	buf := bytes.NewBuffer(nil)
+	json.NewEncoder(buf).Encode(map[string]interface{}{
+		"input": 13,
+		"extensions": []map[string]interface{}{
+			{
+				"from":             "temp",
+				"to":               "bar",
+				"distance":         -1,
+				"f":                "val - 10",
+				"placeholder_name": "val",
+			},
+			{
+				"from":             "foo",
+				"to":               "temp",
+				"distance":         -1,
+				"f":                "4*x",
+				"placeholder_name": "x",
+			},
+		},
+	})
+	resp, err := http.Post(server.URL+"/extended-conversions/foo/bar", "application/json", buf)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer resp.Body.Close()
+	rgbByte, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(rgbByte))
+
+	//output:
+	//42
+}
+
+func ExampleMixedExtension() {
+	c, err := converter.New()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	server := httptest.NewServer(GetRouter(c))
+	defer server.Close()
+
+	buf := bytes.NewBuffer(nil)
+	json.NewEncoder(buf).Encode(map[string]interface{}{
+		"input": 13,
+		"extensions": []map[string]interface{}{
+			{
+				"from":             characteristics.Kelvin,
+				"to":               "bar",
+				"distance":         -1,
+				"f":                "val - 10",
+				"placeholder_name": "val",
+			},
+			{
+				"from":             "foo",
+				"to":               characteristics.Celsius,
+				"distance":         -1,
+				"f":                "4*x",
+				"placeholder_name": "x",
+			},
+		},
+	})
+	resp, err := http.Post(server.URL+"/extended-conversions/foo/bar", "application/json", buf)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer resp.Body.Close()
+	rgbByte, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(string(rgbByte))
+
+	//output:
+	//315.15
 }

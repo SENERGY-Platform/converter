@@ -7,7 +7,7 @@ which prints a dot graph. you can use https://dreampuf.github.io/GraphvizOnline 
 
 ![conversion graph](./graphviz.svg)
 
-##known dependent repositories
+## known dependent repositories
 
 - https://github.com/SENERGY-Platform/marshaller
 - https://github.com/SENERGY-Platform/external-task-worker

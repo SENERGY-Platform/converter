@@ -16,6 +16,14 @@
 
 package model
 
+type ConverterExtension struct {
+	From            string `json:"from"`
+	To              string `json:"to"`
+	Distance        int64  `json:"distance"`
+	F               string `json:"f"`
+	PlaceholderName string `json:"placeholder_name"`
+}
+
 var NullCharacteristic = Characteristic{
 	Id:   "null",
 	Name: "null",

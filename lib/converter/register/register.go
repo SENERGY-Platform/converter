@@ -46,4 +46,5 @@ func Add(from CharacteristicId, to CharacteristicId, distance int64, cast CastFu
 
 type Register interface {
 	GetCasts(from CharacteristicId, to CharacteristicId) (casts []CastFunction, err error)
+	Update(register []Entry) (err error)
 }

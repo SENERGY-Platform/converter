@@ -19,40 +19,53 @@ package register
 import (
 	"errors"
 	"github.com/RyanCarrier/dijkstra"
+	"sync"
 )
 
 type GraphRegister struct {
-	graph *dijkstra.Graph
-	casts map[CharacteristicId]map[CharacteristicId]CastFunction
+	knownCasts map[string]map[string][]CastFunction
+	graph      *dijkstra.Graph
+	casts      map[CharacteristicId]map[CharacteristicId]CastFunction
+	mux        sync.Mutex
 }
 
 func NewGraphRegister(register []Entry) (this *GraphRegister, err error) {
 	this = &GraphRegister{
-		graph: dijkstra.NewGraph(),
-		casts: map[CharacteristicId]map[CharacteristicId]CastFunction{},
+		knownCasts: map[string]map[string][]CastFunction{},
 	}
+	return this, this.Update(register)
+}
+
+func (this *GraphRegister) Update(register []Entry) (err error) {
+	tempGraph := dijkstra.NewGraph()
+	tempCasts := map[CharacteristicId]map[CharacteristicId]CastFunction{}
 	for _, entry := range register {
-		if _, ok := this.casts[entry.From]; !ok {
-			this.casts[entry.From] = map[CharacteristicId]CastFunction{}
+		if _, ok := tempCasts[entry.From]; !ok {
+			tempCasts[entry.From] = map[CharacteristicId]CastFunction{}
 		}
-		this.casts[entry.From][entry.To] = entry.Cast
-		if _, err := this.graph.GetMapping(entry.From); err != nil {
-			this.graph.AddMappedVertex(entry.From)
+		tempCasts[entry.From][entry.To] = entry.Cast
+		if _, err := tempGraph.GetMapping(entry.From); err != nil {
+			tempGraph.AddMappedVertex(entry.From)
 		}
-		if _, err := this.graph.GetMapping(entry.To); err != nil {
-			this.graph.AddMappedVertex(entry.To)
+		if _, err := tempGraph.GetMapping(entry.To); err != nil {
+			tempGraph.AddMappedVertex(entry.To)
 		}
-		err = this.graph.AddMappedArc(entry.From, entry.To, entry.Distance)
+		err = tempGraph.AddMappedArc(entry.From, entry.To, entry.Distance)
 		if err != nil {
-			return this, err
+			return err
 		}
 	}
-	return this, nil
+	this.graph = tempGraph
+	this.casts = tempCasts
+	return nil
 }
 
 func (this *GraphRegister) GetCasts(from CharacteristicId, to CharacteristicId) (casts []CastFunction, err error) {
 	if from == to {
 		return []CastFunction{}, nil
+	}
+	if casts, ok := this.getCachedCasts(from, to); ok {
+		return casts, nil
 	}
 	path, err := this.path(from, to)
 	if err != nil {
@@ -69,7 +82,27 @@ func (this *GraphRegister) GetCasts(from CharacteristicId, to CharacteristicId) 
 		}
 		casts = append(casts, cast)
 	}
+	this.setCachedCasts(from, to, casts)
 	return casts, nil
+}
+
+func (this *GraphRegister) getCachedCasts(from, to CharacteristicId) (casts []CastFunction, ok bool) {
+	this.mux.Lock()
+	defer this.mux.Unlock()
+	if _, ok = this.knownCasts[from]; !ok {
+		this.knownCasts[from] = map[string][]CastFunction{}
+	}
+	casts, ok = this.knownCasts[from][to]
+	return casts, ok
+}
+
+func (this *GraphRegister) setCachedCasts(from, to CharacteristicId, casts []CastFunction) {
+	this.mux.Lock()
+	defer this.mux.Unlock()
+	if _, ok := this.knownCasts[from]; !ok {
+		this.knownCasts[from] = map[string][]CastFunction{}
+	}
+	this.knownCasts[from][to] = casts
 }
 
 type PathElement struct {
