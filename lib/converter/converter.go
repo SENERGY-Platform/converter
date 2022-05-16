@@ -115,7 +115,7 @@ func (this *Converter) ValidateExtensions(nodes []string, extensions []model.Con
 			if from != to {
 				casts, err := tempConverter.register.GetCasts(from, to)
 				if err != nil {
-					return fmt.Errorf("eror while searching conversion path from %v to %v: %w", from, to, err)
+					return fmt.Errorf("error while searching conversion path from %v to %v: %w", from, to, err)
 				}
 				if len(casts) == 0 {
 					return fmt.Errorf("no conversion path from %v to %v found", from, to)
