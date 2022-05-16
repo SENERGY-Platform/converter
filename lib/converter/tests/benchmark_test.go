@@ -49,7 +49,7 @@ func BenchmarkCast(b *testing.B) {
 				From:            "foo",
 				To:              "bar",
 				Distance:        -1,
-				F:               "x+2.4",
+				Formula:         "x+2.4",
 				PlaceholderName: "x",
 			},
 		})
@@ -69,7 +69,7 @@ func BenchmarkCast(b *testing.B) {
 				From:            characteristics.Celsius,
 				To:              characteristics.Kelvin,
 				Distance:        -1,
-				F:               "x+2.4",
+				Formula:         "x+2.4",
 				PlaceholderName: "x",
 			},
 		})

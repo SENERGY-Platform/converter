@@ -95,15 +95,47 @@ func (this *Converter) CastWithExtension(in interface{}, from string, to string,
 	return tempConverter.Cast(in, from, to)
 }
 
+func (this *Converter) ValidateExtensions(nodes []string, extensions []model.ConverterExtension) (err error) {
+	rules := []register.Entry{}
+	rules = append(rules, register.List...)
+	for _, ruleDesc := range extensions {
+		rules = append(rules, register.Entry{
+			From:     ruleDesc.From,
+			To:       ruleDesc.To,
+			Distance: ruleDesc.Distance,
+			Cast:     getExtensionCastFunction(ruleDesc),
+		})
+	}
+	tempConverter, err := NewFromRegisterEntries(rules)
+	if err != nil {
+		return fmt.Errorf("unable to create extended converter: %w", err)
+	}
+	for _, from := range nodes {
+		for _, to := range nodes {
+			if from != to {
+				casts, err := tempConverter.register.GetCasts(from, to)
+				if err != nil {
+					return fmt.Errorf("eror while searching conversion path from %v to %v: %w", from, to, err)
+				}
+				if len(casts) == 0 {
+					return fmt.Errorf("no conversion path from %v to %v found", from, to)
+				}
+			}
+
+		}
+	}
+	return nil
+}
+
 func getExtensionCastFunction(desc model.ConverterExtension) register.CastFunction {
 	return func(in interface{}) (out interface{}, err error) {
-		expression, err := govaluate.NewEvaluableExpression(desc.F)
+		expression, err := govaluate.NewEvaluableExpression(desc.Formula)
 		if err != nil {
-			return out, fmt.Errorf("unable to parse extension expression (%v): %v", desc.F, err)
+			return out, fmt.Errorf("unable to parse extension expression (%v): %v", desc.Formula, err)
 		}
 		out, err = expression.Evaluate(map[string]interface{}{desc.PlaceholderName: in})
 		if err != nil {
-			return out, fmt.Errorf("unable to evaluate extension expression (%v) with input (%v = %v): %v", desc.F, desc.PlaceholderName, in, err)
+			return out, fmt.Errorf("unable to evaluate extension expression (%v) with input (%v = %v): %v", desc.Formula, desc.PlaceholderName, in, err)
 		}
 		return out, nil
 	}

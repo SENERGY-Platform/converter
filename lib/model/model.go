@@ -20,7 +20,7 @@ type ConverterExtension struct {
 	From            string `json:"from"`
 	To              string `json:"to"`
 	Distance        int64  `json:"distance"`
-	F               string `json:"f"`
+	Formula         string `json:"formula"`
 	PlaceholderName string `json:"placeholder_name"`
 }
 
