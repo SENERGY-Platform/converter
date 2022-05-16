@@ -120,12 +120,12 @@ func ExamplePureExtension() {
 		return
 	}
 	defer resp.Body.Close()
-	rgbByte, err := ioutil.ReadAll(resp.Body)
+	temp, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(string(rgbByte))
+	fmt.Println(string(temp))
 
 	//output:
 	//42
@@ -175,4 +175,101 @@ func ExampleMixedExtension() {
 
 	//output:
 	//315.15
+}
+
+func ExampleExtensionWithLogic() {
+	c, err := converter.New()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	server := httptest.NewServer(GetRouter(c))
+	defer server.Close()
+
+	extensionExampleHelper(server.URL, true, []map[string]interface{}{
+		{
+			"from":             "foo",
+			"to":               "bar",
+			"distance":         -1,
+			"formula":          "x ? 100 : 0",
+			"placeholder_name": "x",
+		},
+	})
+	extensionExampleHelper(server.URL, false, []map[string]interface{}{
+		{
+			"from":             "foo",
+			"to":               "bar",
+			"distance":         -1,
+			"formula":          "x ? 100 : 0",
+			"placeholder_name": "x",
+		},
+	})
+
+	extensionExampleHelper(server.URL, 5, []map[string]interface{}{
+		{
+			"from":             "foo",
+			"to":               "bar",
+			"distance":         -1,
+			"formula":          "x > 2 ? 100 : 0",
+			"placeholder_name": "x",
+		},
+	})
+
+	extensionExampleHelper(server.URL, 1, []map[string]interface{}{
+		{
+			"from":             "foo",
+			"to":               "bar",
+			"distance":         -1,
+			"formula":          "x > 2 ? 100 : 0",
+			"placeholder_name": "x",
+		},
+	})
+
+	extensionExampleHelper(server.URL, 1, []map[string]interface{}{
+		{
+			"from":             "foo",
+			"to":               "bar",
+			"distance":         -1,
+			"formula":          "x > 2",
+			"placeholder_name": "x",
+		},
+	})
+
+	extensionExampleHelper(server.URL, 5, []map[string]interface{}{
+		{
+			"from":             "foo",
+			"to":               "bar",
+			"distance":         -1,
+			"formula":          "x > 2",
+			"placeholder_name": "x",
+		},
+	})
+
+	//output:
+	//100
+	//0
+	//100
+	//0
+	//false
+	//true
+}
+
+func extensionExampleHelper(url string, input interface{}, extensions []map[string]interface{}) {
+	buf := bytes.NewBuffer(nil)
+	json.NewEncoder(buf).Encode(map[string]interface{}{
+		"input":      input,
+		"extensions": extensions,
+	})
+	resp, err := http.Post(url+"/extended-conversions/foo/bar", "application/json", buf)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	defer resp.Body.Close()
+	temp, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(strings.TrimSpace(string(temp)))
 }
