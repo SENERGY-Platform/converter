@@ -22,6 +22,7 @@ import (
 	"gopkg.in/go-playground/colors.v1"
 	"log"
 	"runtime/debug"
+	"strings"
 )
 
 const Rgb = "urn:infai:ses:characteristic:5b4eea52-e8e5-4e80-9455-0382f81a1b43"
@@ -37,6 +38,9 @@ func init() {
 		if !ok {
 			debug.PrintStack()
 			return nil, errors.New("unable to interpret value as string")
+		}
+		if !strings.HasPrefix(hexStr, "#") {
+			hexStr = "#" + hexStr
 		}
 		hex, err := colors.ParseHEX(hexStr)
 		if err != nil {
