@@ -22,6 +22,7 @@ import (
 	"github.com/Knetic/govaluate"
 	"github.com/SENERGY-Platform/converter/lib/converter/register"
 	"github.com/SENERGY-Platform/converter/lib/model"
+	"strconv"
 )
 import _ "github.com/SENERGY-Platform/converter/lib/converter/characteristics"
 
@@ -129,7 +130,7 @@ func (this *Converter) ValidateExtensions(nodes []string, extensions []model.Con
 
 func getExtensionCastFunction(desc model.ConverterExtension) register.CastFunction {
 	return func(in interface{}) (out interface{}, err error) {
-		expression, err := govaluate.NewEvaluableExpression(desc.Formula)
+		expression, err := govaluate.NewEvaluableExpressionWithFunctions(desc.Formula, getGovaluateExpressionFunctions())
 		if err != nil {
 			return out, fmt.Errorf("unable to parse extension expression (%v): %v", desc.Formula, err)
 		}
@@ -138,5 +139,51 @@ func getExtensionCastFunction(desc model.ConverterExtension) register.CastFuncti
 			return out, fmt.Errorf("unable to evaluate extension expression (%v) with input (%v = %v): %v", desc.Formula, desc.PlaceholderName, in, err)
 		}
 		return out, nil
+	}
+}
+
+func getGovaluateExpressionFunctions() map[string]govaluate.ExpressionFunction {
+	return map[string]govaluate.ExpressionFunction{
+		"atoi": func(arguments ...interface{}) (interface{}, error) {
+			if len(arguments) != 1 {
+				return nil, errors.New("atoi: expect exactly one argument")
+			}
+			str, ok := arguments[0].(string)
+			if !ok {
+				return nil, errors.New("atoi: expect argument 1 to be a string")
+			}
+			return strconv.ParseInt(str, 10, 64)
+		},
+		"atof": func(arguments ...interface{}) (interface{}, error) {
+			if len(arguments) != 1 {
+				return nil, errors.New("atof: expect exactly one argument")
+			}
+			str, ok := arguments[0].(string)
+			if !ok {
+				return nil, errors.New("atof: expect argument 1 to be a string")
+			}
+			return strconv.ParseFloat(str, 64)
+		},
+		"ntoa": func(arguments ...interface{}) (interface{}, error) {
+			if len(arguments) != 1 {
+				return nil, errors.New("ntoa: expect exactly one argument")
+			}
+			switch v := arguments[0].(type) {
+			case int:
+				return strconv.FormatInt(int64(v), 10), nil
+			case int16:
+				return strconv.FormatInt(int64(v), 10), nil
+			case int32:
+				return strconv.FormatInt(int64(v), 10), nil
+			case int64:
+				return strconv.FormatInt(v, 10), nil
+			case float32:
+				return strconv.FormatFloat(float64(v), 'f', -1, 32), nil
+			case float64:
+				return strconv.FormatFloat(v, 'f', -1, 64), nil
+			default:
+				return "", errors.New("ntoa: expect argument 1 to have one of the following types: int, int16, int32, int64, float32, float64")
+			}
+		},
 	}
 }
