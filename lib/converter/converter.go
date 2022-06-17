@@ -23,6 +23,7 @@ import (
 	"github.com/SENERGY-Platform/converter/lib/converter/register"
 	"github.com/SENERGY-Platform/converter/lib/model"
 	"strconv"
+	"strings"
 )
 import _ "github.com/SENERGY-Platform/converter/lib/converter/characteristics"
 
@@ -144,6 +145,134 @@ func getExtensionCastFunction(desc model.ConverterExtension) register.CastFuncti
 
 func getGovaluateExpressionFunctions() map[string]govaluate.ExpressionFunction {
 	return map[string]govaluate.ExpressionFunction{
+		"substr": func(arguments ...interface{}) (result interface{}, err error) {
+			defer func() {
+				if r := recover(); r != nil {
+					err = fmt.Errorf("substr: catch panic %v", r)
+				}
+			}()
+			if len(arguments) != 3 {
+				return nil, errors.New("substr: expect exactly 3 arguments")
+			}
+			str, ok := arguments[0].(string)
+			if !ok {
+				return nil, errors.New("substr: expect argument 1 to be a string")
+			}
+			from, err := getInt(arguments[1])
+			if err != nil {
+				return nil, errors.New("substr: expect argument 2 to be a number")
+			}
+			to, err := getInt(arguments[2])
+			if err != nil {
+				return nil, errors.New("substr: expect argument 3 to be a number")
+			}
+			return str[from:to], nil
+		},
+		"replace": func(arguments ...interface{}) (result interface{}, err error) {
+			defer func() {
+				if r := recover(); r != nil {
+					err = fmt.Errorf("replace: catch panic %v", r)
+				}
+			}()
+			if len(arguments) != 3 {
+				return nil, errors.New("replace: expect exactly 3 arguments")
+			}
+			str, ok := arguments[0].(string)
+			if !ok {
+				return nil, errors.New("replace: expect argument 1 to be a string")
+			}
+			oldStr, ok := arguments[1].(string)
+			if !ok {
+				return nil, errors.New("replace: expect argument 2 to be a string")
+			}
+			newStr, ok := arguments[2].(string)
+			if !ok {
+				return nil, errors.New("replace: expect argument 3 to be a string")
+			}
+			return strings.ReplaceAll(str, oldStr, newStr), nil
+		},
+		"trimSuffix": func(arguments ...interface{}) (result interface{}, err error) {
+			defer func() {
+				if r := recover(); r != nil {
+					err = fmt.Errorf("trimSuffix: catch panic %v", r)
+				}
+			}()
+			if len(arguments) != 2 {
+				return nil, errors.New("trimSuffix: expect exactly 2 arguments")
+			}
+			str, ok := arguments[0].(string)
+			if !ok {
+				return nil, errors.New("trimSuffix: expect argument 1 to be a string")
+			}
+			suffix, ok := arguments[1].(string)
+			if !ok {
+				return nil, errors.New("trimSuffix: expect argument 2 to be a string")
+			}
+			return strings.TrimSuffix(str, suffix), nil
+		},
+		"trimPrefix": func(arguments ...interface{}) (result interface{}, err error) {
+			defer func() {
+				if r := recover(); r != nil {
+					err = fmt.Errorf("trimPrefix: catch panic %v", r)
+				}
+			}()
+			if len(arguments) != 2 {
+				return nil, errors.New("trimPrefix: expect exactly 2 arguments")
+			}
+			str, ok := arguments[0].(string)
+			if !ok {
+				return nil, errors.New("trimPrefix: expect argument 1 to be a string")
+			}
+			suffix, ok := arguments[1].(string)
+			if !ok {
+				return nil, errors.New("trimPrefix: expect argument 2 to be a string")
+			}
+			return strings.TrimPrefix(str, suffix), nil
+		},
+		"strIndex": func(arguments ...interface{}) (interface{}, error) {
+			if len(arguments) != 2 {
+				return nil, errors.New("strIndex: expect exactly 2 arguments")
+			}
+			str, ok := arguments[0].(string)
+			if !ok {
+				return nil, errors.New("strIndex: expect argument 1 to be a string")
+			}
+			sub, ok := arguments[1].(string)
+			if !ok {
+				return nil, errors.New("strIndex: expect argument 2 to be a string")
+			}
+			return strings.Index(str, sub), nil
+		},
+		"strlen": func(arguments ...interface{}) (interface{}, error) {
+			if len(arguments) != 1 {
+				return nil, errors.New("strlen: expect exactly one argument")
+			}
+			str, ok := arguments[0].(string)
+			if !ok {
+				return nil, errors.New("strlen: expect argument 1 to be a string")
+			}
+			return len(str), nil
+		},
+		"toUpperCase": func(arguments ...interface{}) (interface{}, error) {
+			if len(arguments) != 1 {
+				return nil, errors.New("toUpperCase: expect exactly 1 argument")
+			}
+			str, ok := arguments[0].(string)
+			if !ok {
+				return nil, errors.New("toUpperCase: expect argument 1 to be a string")
+			}
+			return strings.ToUpper(str), nil
+		},
+		"toLowerCase": func(arguments ...interface{}) (interface{}, error) {
+			if len(arguments) != 1 {
+				return nil, errors.New("toLowerCase: expect exactly 1 argument")
+			}
+			str, ok := arguments[0].(string)
+			if !ok {
+				return nil, errors.New("toLowerCase: expect argument 1 to be a string")
+			}
+			return strings.ToLower(str), nil
+		},
 		"atoi": func(arguments ...interface{}) (interface{}, error) {
 			if len(arguments) != 1 {
 				return nil, errors.New("atoi: expect exactly one argument")
@@ -185,5 +314,24 @@ func getGovaluateExpressionFunctions() map[string]govaluate.ExpressionFunction {
 				return "", errors.New("ntoa: expect argument 1 to have one of the following types: int, int16, int32, int64, float32, float64")
 			}
 		},
+	}
+}
+
+func getInt(in interface{}) (int, error) {
+	switch i := in.(type) {
+	case int:
+		return i, nil
+	case int16:
+		return int(i), nil
+	case int32:
+		return int(i), nil
+	case int64:
+		return int(i), nil
+	case float32:
+		return int(i), nil
+	case float64:
+		return int(i), nil
+	default:
+		return 0, errors.New("not number")
 	}
 }

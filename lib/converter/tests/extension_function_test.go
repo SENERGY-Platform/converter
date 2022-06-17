@@ -29,6 +29,167 @@ func TestExtensionFunctions(t *testing.T) {
 		t.Error(err)
 		return
 	}
+
+	t.Run("strlen", func(t *testing.T) {
+		out, err := c.CastWithExtension("42", "foo", "bar", []model.ConverterExtension{
+			{
+				From:            "foo",
+				To:              "bar",
+				Distance:        -1,
+				Formula:         "strlen(x)",
+				PlaceholderName: "x",
+			},
+		})
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		if !reflect.DeepEqual(out, int(2)) {
+			t.Error(out)
+			return
+		}
+	})
+
+	t.Run("strIndex", func(t *testing.T) {
+		out, err := c.CastWithExtension("4.2", "foo", "bar", []model.ConverterExtension{
+			{
+				From:            "foo",
+				To:              "bar",
+				Distance:        -1,
+				Formula:         "strIndex(x, \".\")",
+				PlaceholderName: "x",
+			},
+		})
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		if !reflect.DeepEqual(out, int(1)) {
+			t.Error(out)
+			return
+		}
+	})
+
+	t.Run("trimPrefix", func(t *testing.T) {
+		out, err := c.CastWithExtension("foo:4.2", "foo", "bar", []model.ConverterExtension{
+			{
+				From:            "foo",
+				To:              "bar",
+				Distance:        -1,
+				Formula:         "trimPrefix(x, \"foo:\")",
+				PlaceholderName: "x",
+			},
+		})
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		if !reflect.DeepEqual(out, "4.2") {
+			t.Error(out)
+			return
+		}
+	})
+
+	t.Run("trimSuffix", func(t *testing.T) {
+		out, err := c.CastWithExtension("foo:4.2", "foo", "bar", []model.ConverterExtension{
+			{
+				From:            "foo",
+				To:              "bar",
+				Distance:        -1,
+				Formula:         "trimSuffix(x, \":4.2\")",
+				PlaceholderName: "x",
+			},
+		})
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		if !reflect.DeepEqual(out, "foo") {
+			t.Error(out)
+			return
+		}
+	})
+
+	t.Run("replace", func(t *testing.T) {
+		out, err := c.CastWithExtension("foo:4.2", "foo", "bar", []model.ConverterExtension{
+			{
+				From:            "foo",
+				To:              "bar",
+				Distance:        -1,
+				Formula:         "replace(x, \":\", \"/\")",
+				PlaceholderName: "x",
+			},
+		})
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		if !reflect.DeepEqual(out, "foo/4.2") {
+			t.Error(out)
+			return
+		}
+	})
+
+	t.Run("substr", func(t *testing.T) {
+		out, err := c.CastWithExtension("0123456789", "foo", "bar", []model.ConverterExtension{
+			{
+				From:            "foo",
+				To:              "bar",
+				Distance:        -1,
+				Formula:         "substr(x, 2, 4)",
+				PlaceholderName: "x",
+			},
+		})
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		if !reflect.DeepEqual(out, "23") {
+			t.Error(out)
+			return
+		}
+	})
+
+	t.Run("toUpperCase", func(t *testing.T) {
+		out, err := c.CastWithExtension("fooBAR", "foo", "bar", []model.ConverterExtension{
+			{
+				From:            "foo",
+				To:              "bar",
+				Distance:        -1,
+				Formula:         "toUpperCase(x)",
+				PlaceholderName: "x",
+			},
+		})
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		if !reflect.DeepEqual(out, "FOOBAR") {
+			t.Error(out)
+			return
+		}
+	})
+
+	t.Run("toLowerCase", func(t *testing.T) {
+		out, err := c.CastWithExtension("fooBAR", "foo", "bar", []model.ConverterExtension{
+			{
+				From:            "foo",
+				To:              "bar",
+				Distance:        -1,
+				Formula:         "toLowerCase(x)",
+				PlaceholderName: "x",
+			},
+		})
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		if !reflect.DeepEqual(out, "foobar") {
+			t.Error(out)
+			return
+		}
+	})
+
 	t.Run("atoi", func(t *testing.T) {
 		out, err := c.CastWithExtension("42", "foo", "bar", []model.ConverterExtension{
 			{
