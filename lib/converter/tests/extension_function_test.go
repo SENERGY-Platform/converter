@@ -17,6 +17,7 @@
 package converter
 
 import (
+	"fmt"
 	"github.com/SENERGY-Platform/converter/lib/converter"
 	"github.com/SENERGY-Platform/converter/lib/model"
 	"reflect"
@@ -309,4 +310,52 @@ func TestExtensionFunctions(t *testing.T) {
 			return
 		}
 	})
+}
+
+func ExampleNtoa() {
+	c, err := converter.New()
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+	out, err := c.CastWithExtension(42.0, "foo", "bar", []model.ConverterExtension{
+		{
+			From:            "foo",
+			To:              "bar",
+			Distance:        -1,
+			Formula:         `ntoa(x) == "42"`,
+			PlaceholderName: "x",
+		},
+	})
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+	fmt.Println(out)
+	//output:
+	//true
+}
+
+func ExampleAtoiNtoa() {
+	c, err := converter.New()
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+	out, err := c.CastWithExtension(42.0, "foo", "bar", []model.ConverterExtension{
+		{
+			From:            "foo",
+			To:              "bar",
+			Distance:        -1,
+			Formula:         "atoi(ntoa(x))==42",
+			PlaceholderName: "x",
+		},
+	})
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+	fmt.Println(out)
+	//output:
+	//true
 }
