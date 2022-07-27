@@ -293,6 +293,64 @@ func getGovaluateExpressionFunctions() map[string]govaluate.ExpressionFunction {
 			}
 			return strconv.ParseFloat(str, 64)
 		},
+		"mapSet": func(arguments ...interface{}) (interface{}, error) {
+			if len(arguments) != 3 {
+				return nil, errors.New("mapSet: expect exactly 3 arguments")
+			}
+			m, ok := arguments[0].(map[string]interface{})
+			if !ok {
+				return nil, errors.New("mapSet: expect argument 1 to be a map[string]interface{}")
+			}
+			key, ok := arguments[1].(string)
+			if !ok {
+				return nil, errors.New("strIndex: expect argument 2 to be a string")
+			}
+			value := arguments[2]
+
+			result := map[string]interface{}{}
+			for k, v := range m {
+				result[k] = v
+			}
+			result[key] = value
+			return result, nil
+		},
+		"mapGet": func(arguments ...interface{}) (interface{}, error) {
+			if len(arguments) != 2 {
+				return nil, errors.New("mapGet: expect exactly 2 arguments")
+			}
+			m, ok := arguments[0].(map[string]interface{})
+			if !ok {
+				return nil, errors.New("mapGet: expect argument 1 to be a map[string]interface{}")
+			}
+			key, ok := arguments[1].(string)
+			if !ok {
+				return nil, errors.New("mapGet: expect argument 2 to be a string")
+			}
+			result, ok := m[key]
+			if !ok {
+				return nil, errors.New("mapGet: key not found")
+			}
+			return result, nil
+		},
+		"mapDelete": func(arguments ...interface{}) (interface{}, error) {
+			if len(arguments) != 2 {
+				return nil, errors.New("mapDelete: expect exactly 2 arguments")
+			}
+			m, ok := arguments[0].(map[string]interface{})
+			if !ok {
+				return nil, errors.New("mapDelete: expect argument 1 to be a map[string]interface{}")
+			}
+			key, ok := arguments[1].(string)
+			if !ok {
+				return nil, errors.New("mapDelete: expect argument 2 to be a string")
+			}
+			result := map[string]interface{}{}
+			for k, v := range m {
+				result[k] = v
+			}
+			delete(result, key)
+			return result, nil
+		},
 		"ntoa": func(arguments ...interface{}) (interface{}, error) {
 			if len(arguments) != 1 {
 				return nil, errors.New("ntoa: expect exactly one argument")

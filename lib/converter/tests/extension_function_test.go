@@ -347,7 +347,7 @@ func ExampleAtoiNtoa() {
 			From:            "foo",
 			To:              "bar",
 			Distance:        -1,
-			Formula:         "atoi(ntoa(x))==42",
+			Formula:         "atoi(ntoa(x))",
 			PlaceholderName: "x",
 		},
 	})
@@ -357,7 +357,7 @@ func ExampleAtoiNtoa() {
 	}
 	fmt.Println(out)
 	//output:
-	//true
+	//42
 }
 
 func ExampleComplexExpression() {
@@ -407,5 +407,39 @@ func ExampleComplexExpression() {
 	//output:
 	// 10:38
 	// 01:08
+
+}
+
+func ExampleStructExpression() {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("PANIC:", r)
+		}
+	}()
+	c, err := converter.New()
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+
+	expr := `mapDelete(mapSet(x, "bar", ntoa(mapGet(x, "foo")+1)), "foo")`
+
+	out1, err := c.CastWithExtension(map[string]interface{}{"foo": 42.0}, "foo", "bar", []model.ConverterExtension{
+		{
+			From:            "foo",
+			To:              "bar",
+			Distance:        -1,
+			Formula:         expr,
+			PlaceholderName: "x",
+		},
+	})
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+	fmt.Println(out1)
+
+	//output:
+	// map[bar:43]
 
 }

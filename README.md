@@ -78,6 +78,24 @@ https://github.com/Knetic/govaluate/blob/master/MANUAL.md
 - signature: func(s string)string
 - example: `toLowerCase("fooBAR") == "foobar"`
 
+### mapGet
+
+- returns element of a map
+- signature: func(m map[string]interface{}, key string)map[string]interface
+- example: `mapGet(x, "foo")`
+
+### mapSet
+
+- sets element of a map and returns the new map
+- signature: func(m map[string]interface{}, key string, value interface{})map[string]interface
+- example: `mapSet(x, "bar", 42)`
+
+### mapGet
+
+- removes element of a map
+- signature: func(m map[string]interface{}, key string)map[string]interface
+- example: `mapDelete(x, "bar")`
+
 # default conversions
 to get a graph of possible conversions, call
 ```
