@@ -359,3 +359,53 @@ func ExampleAtoiNtoa() {
 	//output:
 	//true
 }
+
+func ExampleComplexExpression() {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("PANIC:", r)
+		}
+	}()
+	c, err := converter.New()
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+
+	expr := `(((x-(x%60))/60) >= 10 ? "" : "0") + ntoa(((x-(x%60))/60)) + ":" + (((x%60 >= 10) ? "" : "0" ) + ntoa(x%60))`
+
+	out1, err := c.CastWithExtension(638, "foo", "bar", []model.ConverterExtension{
+		{
+			From:            "foo",
+			To:              "bar",
+			Distance:        -1,
+			Formula:         expr,
+			PlaceholderName: "x",
+		},
+	})
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+	fmt.Println(out1)
+
+	out2, err := c.CastWithExtension(68, "foo", "bar", []model.ConverterExtension{
+		{
+			From:            "foo",
+			To:              "bar",
+			Distance:        -1,
+			Formula:         expr,
+			PlaceholderName: "x",
+		},
+	})
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+	fmt.Println(out2)
+
+	//output:
+	// 10:38
+	// 01:08
+
+}
