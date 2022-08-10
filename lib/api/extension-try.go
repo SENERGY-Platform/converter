@@ -51,10 +51,6 @@ func ExtensionCallEndpoint(router *httprouter.Router, converter *converter.Conve
 		}
 		result := Response{}
 		result.Output, result.Error = converter.TryExtension(r.Extension, r.Input)
-		if err != nil {
-			http.Error(writer, err.Error(), http.StatusBadRequest)
-			return
-		}
 		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
 		err = json.NewEncoder(writer).Encode(result)
 		if err != nil {
