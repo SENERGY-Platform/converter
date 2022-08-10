@@ -39,7 +39,7 @@ func ExtensionCallEndpoint(router *httprouter.Router, converter *converter.Conve
 
 	type Response struct {
 		Output interface{} `json:"output"`
-		Error  error       `json:"error,omitempty"`
+		Error  string      `json:"error,omitempty"`
 	}
 
 	router.POST(resource, func(writer http.ResponseWriter, request *http.Request, ps httprouter.Params) {
@@ -50,7 +50,10 @@ func ExtensionCallEndpoint(router *httprouter.Router, converter *converter.Conve
 			return
 		}
 		result := Response{}
-		result.Output, result.Error = converter.TryExtension(r.Extension, r.Input)
+		result.Output, err = converter.TryExtension(r.Extension, r.Input)
+		if err != nil {
+			result.Error = err.Error()
+		}
 		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
 		err = json.NewEncoder(writer).Encode(result)
 		if err != nil {
