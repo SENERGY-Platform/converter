@@ -129,6 +129,10 @@ func (this *Converter) ValidateExtensions(nodes []string, extensions []model.Con
 	return nil
 }
 
+func (this *Converter) TryExtension(extension model.ConverterExtension, in interface{}) (out interface{}, err error) {
+	return getExtensionCastFunction(extension)(in)
+}
+
 func getExtensionCastFunction(desc model.ConverterExtension) register.CastFunction {
 	return func(in interface{}) (out interface{}, err error) {
 		expression, err := govaluate.NewEvaluableExpressionWithFunctions(desc.Formula, getGovaluateExpressionFunctions())
