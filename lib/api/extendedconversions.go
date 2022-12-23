@@ -19,7 +19,7 @@ package api
 import (
 	"encoding/json"
 	"github.com/SENERGY-Platform/converter/lib/converter"
-	"github.com/SENERGY-Platform/converter/lib/model"
+	"github.com/SENERGY-Platform/models/go/models"
 	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
@@ -33,8 +33,8 @@ func ExtendedConversionsEndpoint(router *httprouter.Router, converter *converter
 	resource := "/extended-conversions"
 
 	type RequestWithExtension struct {
-		Input      interface{}                `json:"input"`
-		Extensions []model.ConverterExtension `json:"extensions"`
+		Input      interface{}                 `json:"input"`
+		Extensions []models.ConverterExtension `json:"extensions"`
 	}
 
 	router.POST(resource+"/:from/:to", func(writer http.ResponseWriter, request *http.Request, ps httprouter.Params) {

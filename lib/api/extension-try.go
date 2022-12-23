@@ -19,7 +19,7 @@ package api
 import (
 	"encoding/json"
 	"github.com/SENERGY-Platform/converter/lib/converter"
-	"github.com/SENERGY-Platform/converter/lib/model"
+	"github.com/SENERGY-Platform/models/go/models"
 	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
@@ -33,8 +33,8 @@ func ExtensionCallEndpoint(router *httprouter.Router, converter *converter.Conve
 	resource := "/extension-call"
 
 	type RequestWithExtension struct {
-		Input     interface{}              `json:"input"`
-		Extension model.ConverterExtension `json:"extension"`
+		Input     interface{}               `json:"input"`
+		Extension models.ConverterExtension `json:"extension"`
 	}
 
 	type Response struct {

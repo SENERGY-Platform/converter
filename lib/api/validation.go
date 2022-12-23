@@ -19,7 +19,7 @@ package api
 import (
 	"encoding/json"
 	"github.com/SENERGY-Platform/converter/lib/converter"
-	"github.com/SENERGY-Platform/converter/lib/model"
+	"github.com/SENERGY-Platform/models/go/models"
 	"github.com/julienschmidt/httprouter"
 	"net/http"
 )
@@ -32,8 +32,8 @@ func ValidationEndpoint(router *httprouter.Router, converter *converter.Converte
 	resource := "/validate/extended-conversions"
 
 	type ValidationRequest struct {
-		Nodes      []string                   `json:"nodes"`
-		Extensions []model.ConverterExtension `json:"extensions"`
+		Nodes      []string                    `json:"nodes"`
+		Extensions []models.ConverterExtension `json:"extensions"`
 	}
 
 	router.POST(resource, func(writer http.ResponseWriter, request *http.Request, ps httprouter.Params) {

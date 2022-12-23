@@ -19,7 +19,7 @@ package converter
 import (
 	"fmt"
 	"github.com/SENERGY-Platform/converter/lib/converter"
-	"github.com/SENERGY-Platform/converter/lib/model"
+	"github.com/SENERGY-Platform/models/go/models"
 	"reflect"
 	"testing"
 )
@@ -32,7 +32,7 @@ func TestExtensionFunctions(t *testing.T) {
 	}
 
 	t.Run("strlen", func(t *testing.T) {
-		out, err := c.CastWithExtension("42", "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension("42", "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -52,7 +52,7 @@ func TestExtensionFunctions(t *testing.T) {
 	})
 
 	t.Run("strIndex", func(t *testing.T) {
-		out, err := c.CastWithExtension("4.2", "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension("4.2", "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -72,7 +72,7 @@ func TestExtensionFunctions(t *testing.T) {
 	})
 
 	t.Run("trimPrefix", func(t *testing.T) {
-		out, err := c.CastWithExtension("foo:4.2", "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension("foo:4.2", "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -92,7 +92,7 @@ func TestExtensionFunctions(t *testing.T) {
 	})
 
 	t.Run("trimSuffix", func(t *testing.T) {
-		out, err := c.CastWithExtension("foo:4.2", "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension("foo:4.2", "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -112,7 +112,7 @@ func TestExtensionFunctions(t *testing.T) {
 	})
 
 	t.Run("replace", func(t *testing.T) {
-		out, err := c.CastWithExtension("foo:4.2", "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension("foo:4.2", "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -132,7 +132,7 @@ func TestExtensionFunctions(t *testing.T) {
 	})
 
 	t.Run("substr", func(t *testing.T) {
-		out, err := c.CastWithExtension("0123456789", "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension("0123456789", "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -152,7 +152,7 @@ func TestExtensionFunctions(t *testing.T) {
 	})
 
 	t.Run("toUpperCase", func(t *testing.T) {
-		out, err := c.CastWithExtension("fooBAR", "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension("fooBAR", "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -172,7 +172,7 @@ func TestExtensionFunctions(t *testing.T) {
 	})
 
 	t.Run("toLowerCase", func(t *testing.T) {
-		out, err := c.CastWithExtension("fooBAR", "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension("fooBAR", "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -192,7 +192,7 @@ func TestExtensionFunctions(t *testing.T) {
 	})
 
 	t.Run("atoi", func(t *testing.T) {
-		out, err := c.CastWithExtension("42", "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension("42", "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -212,7 +212,7 @@ func TestExtensionFunctions(t *testing.T) {
 	})
 
 	t.Run("atof", func(t *testing.T) {
-		out, err := c.CastWithExtension("42.13", "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension("42.13", "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -232,7 +232,7 @@ func TestExtensionFunctions(t *testing.T) {
 	})
 
 	t.Run("ntoa_f", func(t *testing.T) {
-		out, err := c.CastWithExtension(42.13, "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension(42.13, "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -252,7 +252,7 @@ func TestExtensionFunctions(t *testing.T) {
 	})
 
 	t.Run("ntoa_i", func(t *testing.T) {
-		out, err := c.CastWithExtension(42, "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension(42, "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -272,7 +272,7 @@ func TestExtensionFunctions(t *testing.T) {
 	})
 
 	t.Run("atof literal with quotes", func(t *testing.T) {
-		out, err := c.CastWithExtension("", "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension("", "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -292,7 +292,7 @@ func TestExtensionFunctions(t *testing.T) {
 	})
 
 	t.Run("atoi literal with single quotes", func(t *testing.T) {
-		out, err := c.CastWithExtension("", "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension("", "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -318,7 +318,7 @@ func ExampleNtoa() {
 		fmt.Println("ERROR:", err)
 		return
 	}
-	out, err := c.CastWithExtension(42.0, "foo", "bar", []model.ConverterExtension{
+	out, err := c.CastWithExtension(42.0, "foo", "bar", []models.ConverterExtension{
 		{
 			From:            "foo",
 			To:              "bar",
@@ -342,7 +342,7 @@ func ExampleAtoiNtoa() {
 		fmt.Println("ERROR:", err)
 		return
 	}
-	out, err := c.CastWithExtension(42.0, "foo", "bar", []model.ConverterExtension{
+	out, err := c.CastWithExtension(42.0, "foo", "bar", []models.ConverterExtension{
 		{
 			From:            "foo",
 			To:              "bar",
@@ -374,7 +374,7 @@ func ExampleComplexExpression() {
 
 	expr := `(((x-(x%60))/60) >= 10 ? "" : "0") + ntoa(((x-(x%60))/60)) + ":" + (((x%60 >= 10) ? "" : "0" ) + ntoa(x%60))`
 
-	out1, err := c.CastWithExtension(638, "foo", "bar", []model.ConverterExtension{
+	out1, err := c.CastWithExtension(638, "foo", "bar", []models.ConverterExtension{
 		{
 			From:            "foo",
 			To:              "bar",
@@ -389,7 +389,7 @@ func ExampleComplexExpression() {
 	}
 	fmt.Println(out1)
 
-	out2, err := c.CastWithExtension(68, "foo", "bar", []model.ConverterExtension{
+	out2, err := c.CastWithExtension(68, "foo", "bar", []models.ConverterExtension{
 		{
 			From:            "foo",
 			To:              "bar",
@@ -424,7 +424,7 @@ func ExampleStructExpression() {
 
 	expr := `mapDelete(mapSet(x, "bar", ntoa(mapGet(x, "foo")+1)), "foo")`
 
-	out1, err := c.CastWithExtension(map[string]interface{}{"foo": 42.0}, "foo", "bar", []model.ConverterExtension{
+	out1, err := c.CastWithExtension(map[string]interface{}{"foo": 42.0}, "foo", "bar", []models.ConverterExtension{
 		{
 			From:            "foo",
 			To:              "bar",

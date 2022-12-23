@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"github.com/SENERGY-Platform/converter/lib/converter"
 	"github.com/SENERGY-Platform/converter/lib/converter/characteristics"
-	"github.com/SENERGY-Platform/converter/lib/model"
+	"github.com/SENERGY-Platform/models/go/models"
 	"testing"
 )
 
@@ -44,7 +44,7 @@ func BenchmarkCast(b *testing.B) {
 	})
 
 	b.Run("extension", func(b *testing.B) {
-		out, err := c.CastWithExtension(42, "foo", "bar", []model.ConverterExtension{
+		out, err := c.CastWithExtension(42, "foo", "bar", []models.ConverterExtension{
 			{
 				From:            "foo",
 				To:              "bar",
@@ -64,7 +64,7 @@ func BenchmarkCast(b *testing.B) {
 	})
 
 	b.Run("extension_overwrite", func(b *testing.B) {
-		out, err := c.CastWithExtension(42, characteristics.Celsius, characteristics.Kelvin, []model.ConverterExtension{
+		out, err := c.CastWithExtension(42, characteristics.Celsius, characteristics.Kelvin, []models.ConverterExtension{
 			{
 				From:            characteristics.Celsius,
 				To:              characteristics.Kelvin,

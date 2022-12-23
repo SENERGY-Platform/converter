@@ -21,7 +21,7 @@ import (
 	"fmt"
 	"github.com/Knetic/govaluate"
 	"github.com/SENERGY-Platform/converter/lib/converter/register"
-	"github.com/SENERGY-Platform/converter/lib/model"
+	"github.com/SENERGY-Platform/models/go/models"
 	"strconv"
 	"strings"
 )
@@ -79,7 +79,7 @@ func (this *Converter) Cast(in interface{}, from string, to string) (out interfa
 	return out, nil
 }
 
-func (this *Converter) CastWithExtension(in interface{}, from string, to string, extensions []model.ConverterExtension) (out interface{}, err error) {
+func (this *Converter) CastWithExtension(in interface{}, from string, to string, extensions []models.ConverterExtension) (out interface{}, err error) {
 	rules := []register.Entry{}
 	rules = append(rules, register.List...)
 	for _, ruleDesc := range extensions {
@@ -97,7 +97,7 @@ func (this *Converter) CastWithExtension(in interface{}, from string, to string,
 	return tempConverter.Cast(in, from, to)
 }
 
-func (this *Converter) ValidateExtensions(nodes []string, extensions []model.ConverterExtension) (err error) {
+func (this *Converter) ValidateExtensions(nodes []string, extensions []models.ConverterExtension) (err error) {
 	rules := []register.Entry{}
 	rules = append(rules, register.List...)
 	for _, ruleDesc := range extensions {
@@ -129,11 +129,11 @@ func (this *Converter) ValidateExtensions(nodes []string, extensions []model.Con
 	return nil
 }
 
-func (this *Converter) TryExtension(extension model.ConverterExtension, in interface{}) (out interface{}, err error) {
+func (this *Converter) TryExtension(extension models.ConverterExtension, in interface{}) (out interface{}, err error) {
 	return getExtensionCastFunction(extension)(in)
 }
 
-func getExtensionCastFunction(desc model.ConverterExtension) register.CastFunction {
+func getExtensionCastFunction(desc models.ConverterExtension) register.CastFunction {
 	return func(in interface{}) (out interface{}, err error) {
 		expression, err := govaluate.NewEvaluableExpressionWithFunctions(desc.Formula, getGovaluateExpressionFunctions())
 		if err != nil {
