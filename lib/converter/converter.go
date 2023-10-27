@@ -17,6 +17,7 @@
 package converter
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/Knetic/govaluate"
@@ -301,7 +302,7 @@ func getGovaluateExpressionFunctions() map[string]govaluate.ExpressionFunction {
 			if len(arguments) != 3 {
 				return nil, errors.New("mapSet: expect exactly 3 arguments")
 			}
-			m, ok := arguments[0].(map[string]interface{})
+			m, ok := ensureMap(arguments[0])
 			if !ok {
 				return nil, errors.New("mapSet: expect argument 1 to be a map[string]interface{}")
 			}
@@ -322,7 +323,7 @@ func getGovaluateExpressionFunctions() map[string]govaluate.ExpressionFunction {
 			if len(arguments) != 2 {
 				return nil, errors.New("mapGet: expect exactly 2 arguments")
 			}
-			m, ok := arguments[0].(map[string]interface{})
+			m, ok := ensureMap(arguments[0])
 			if !ok {
 				return nil, errors.New("mapGet: expect argument 1 to be a map[string]interface{}")
 			}
@@ -340,7 +341,7 @@ func getGovaluateExpressionFunctions() map[string]govaluate.ExpressionFunction {
 			if len(arguments) != 2 {
 				return nil, errors.New("mapDelete: expect exactly 2 arguments")
 			}
-			m, ok := arguments[0].(map[string]interface{})
+			m, ok := ensureMap(arguments[0])
 			if !ok {
 				return nil, errors.New("mapDelete: expect argument 1 to be a map[string]interface{}")
 			}
@@ -377,6 +378,44 @@ func getGovaluateExpressionFunctions() map[string]govaluate.ExpressionFunction {
 			}
 		},
 	}
+}
+
+func ensureMap(input interface{}) (result map[string]interface{}, ok bool) {
+	switch v := input.(type) {
+	case map[string]interface{}:
+		return v, true
+	case map[string]string:
+		return castToInterfaceMap(v), true
+	case map[string]int64:
+		return castToInterfaceMap(v), true
+	case map[string]int32:
+		return castToInterfaceMap(v), true
+	case map[string]int:
+		return castToInterfaceMap(v), true
+	case map[string]float64:
+		return castToInterfaceMap(v), true
+	case map[string]float32:
+		return castToInterfaceMap(v), true
+	case map[string]bool:
+		return castToInterfaceMap(v), true
+	}
+	temp, err := json.Marshal(input)
+	if err != nil {
+		return result, false
+	}
+	err = json.Unmarshal(temp, &result)
+	if err != nil {
+		return result, false
+	}
+	return result, true
+}
+
+func castToInterfaceMap[T any](in map[string]T) (result map[string]interface{}) {
+	result = map[string]interface{}{}
+	for key, value := range in {
+		result[key] = value
+	}
+	return result
 }
 
 func getInt(in interface{}) (int, error) {

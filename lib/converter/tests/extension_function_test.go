@@ -443,3 +443,86 @@ func ExampleStructExpression() {
 	// map[bar:43]
 
 }
+
+func TestMapGet(t *testing.T) {
+	c, err := converter.New()
+	if err != nil {
+		fmt.Println("ERROR:", err)
+		return
+	}
+
+	expr := `mapGet(x, "foo")`
+
+	t.Run("interface map", func(t *testing.T) {
+		defer func() {
+			if r := recover(); r != nil {
+				t.Error(r)
+			}
+		}()
+		out, err := c.CastWithExtension(map[string]interface{}{"foo": 42.0}, "foo", "bar", []models.ConverterExtension{
+			{
+				From:            "foo",
+				To:              "bar",
+				Distance:        -1,
+				Formula:         expr,
+				PlaceholderName: "x",
+			},
+		})
+		if err != nil {
+			t.Error("ERROR:", err)
+			return
+		}
+		if !reflect.DeepEqual(out, 42.0) {
+			t.Error(err)
+		}
+	})
+
+	t.Run("float map", func(t *testing.T) {
+		defer func() {
+			if r := recover(); r != nil {
+				t.Error(r)
+			}
+		}()
+		out, err := c.CastWithExtension(map[string]float64{"foo": 42.0}, "foo", "bar", []models.ConverterExtension{
+			{
+				From:            "foo",
+				To:              "bar",
+				Distance:        -1,
+				Formula:         expr,
+				PlaceholderName: "x",
+			},
+		})
+		if err != nil {
+			t.Error("ERROR:", err)
+			return
+		}
+		if !reflect.DeepEqual(out, 42.0) {
+			t.Error(err)
+		}
+	})
+
+	t.Run("string map", func(t *testing.T) {
+		defer func() {
+			if r := recover(); r != nil {
+				t.Error(r)
+			}
+		}()
+		out, err := c.CastWithExtension(map[string]string{"foo": "42.0"}, "foo", "bar", []models.ConverterExtension{
+			{
+				From:            "foo",
+				To:              "bar",
+				Distance:        -1,
+				Formula:         expr,
+				PlaceholderName: "x",
+			},
+		})
+		if err != nil {
+			t.Error("ERROR:", err)
+			return
+		}
+		if !reflect.DeepEqual(out, "42.0") {
+			t.Error(err)
+		}
+	})
+
+}

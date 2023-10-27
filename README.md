@@ -94,7 +94,7 @@ https://github.com/Knetic/govaluate/blob/master/MANUAL.md
 - signature: func(m map[string]interface{}, key string, value interface{})map[string]interface
 - example: `mapSet(x, "bar", 42)`
 
-### mapGet
+### mapDelete
 
 - removes element of a map
 - signature: func(m map[string]interface{}, key string)map[string]interface
