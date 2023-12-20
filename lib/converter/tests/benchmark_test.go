@@ -83,4 +83,20 @@ func BenchmarkCast(b *testing.B) {
 		}
 	})
 
+	b.Run("complex extension", func(b *testing.B) {
+		_, err := c.CastWithExtension(map[string]interface{}{"b": 23.0, "h": 246.0, "s": 46.0}, "foo", "bar", []models.ConverterExtension{
+			{
+				From:            "foo",
+				To:              "bar",
+				Distance:        -1,
+				Formula:         "(mapSet(x, \"b\", (mapGet(x,\"b\")/100)*254))",
+				PlaceholderName: "x",
+			},
+		})
+		if err != nil {
+			b.Error(err)
+			return
+		}
+	})
+
 }

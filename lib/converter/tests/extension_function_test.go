@@ -24,6 +24,32 @@ import (
 	"testing"
 )
 
+func TestSNRGY3026(t *testing.T) {
+	c, err := converter.New()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+
+	out, err := c.CastWithExtension(map[string]interface{}{"b": 23, "h": 246, "s": 46}, "foo", "bar", []models.ConverterExtension{
+		{
+			From:            "foo",
+			To:              "bar",
+			Distance:        -1,
+			Formula:         "(mapSet(x, \"b\", (mapGet(x,\"b\")/100)*254))",
+			PlaceholderName: "x",
+		},
+	})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if !reflect.DeepEqual(out, map[string]interface{}{"b": 58.42, "h": 246.0, "s": 46.0}) {
+		t.Errorf("%#v", out)
+		return
+	}
+}
+
 func TestExtensionFunctions(t *testing.T) {
 	c, err := converter.New()
 	if err != nil {

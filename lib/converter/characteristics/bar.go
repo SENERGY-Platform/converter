@@ -29,7 +29,7 @@ const Bar = "urn:infai:ses:characteristic:2871c1c4-1c8c-4169-81f6-fb5313df08b1"
 // 1 bar = 1000 hPa
 
 func init() {
-	register.Labels[Bar] = "Bar"
+	register.Labels[Bar] = "InterfaceTypeField"
 
 	register.Add(HPa, Bar, register.NoLosses, func(in interface{}) (out interface{}, err error) {
 		switch hpa := in.(type) {
