@@ -70,6 +70,10 @@ func (this *Converter) Cast(in interface{}, from string, to string) (out interfa
 
 	out = in
 	for _, cast := range casts {
+		out, err = inputCleanup(out)
+		if err != nil {
+			return out, fmt.Errorf("cleanup error: %v", err)
+		}
 		out, err = cast(out)
 		if err != nil {
 			return out, err
@@ -79,10 +83,6 @@ func (this *Converter) Cast(in interface{}, from string, to string) (out interfa
 }
 
 func (this *Converter) CastWithExtension(in interface{}, from string, to string, extensions []models.ConverterExtension) (out interface{}, err error) {
-	in, err = inputCleanup(in)
-	if err != nil {
-		return out, fmt.Errorf("cleanup error: %v", err)
-	}
 	rules := []register.Entry{}
 	rules = append(rules, register.List...)
 	for _, ruleDesc := range extensions {
