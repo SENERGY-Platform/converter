@@ -19,6 +19,7 @@ package api
 import (
 	"github.com/SENERGY-Platform/converter/lib/api/util"
 	"github.com/SENERGY-Platform/converter/lib/converter"
+	"github.com/SENERGY-Platform/service-commons/pkg/accesslog"
 	"github.com/julienschmidt/httprouter"
 	"log"
 	"net/http"
@@ -33,7 +34,7 @@ func Start(port string, converter *converter.Converter) (srv *http.Server, err e
 	router := GetRouter(converter)
 	log.Println("add logging and cors")
 	corsHandler := util.NewCors(router)
-	logger := util.NewLogger(corsHandler)
+	logger := accesslog.New(corsHandler)
 	log.Println("listen on port ", port)
 	srv = &http.Server{Addr: ":" + port, Handler: logger}
 	go func() { log.Println(srv.ListenAndServe()) }()
