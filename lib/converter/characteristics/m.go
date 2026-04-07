@@ -18,10 +18,11 @@ package characteristics
 
 import (
 	"errors"
-	"github.com/SENERGY-Platform/converter/lib/converter/register"
-	"log"
+	"log/slog"
 	"reflect"
 	"runtime/debug"
+
+	"github.com/SENERGY-Platform/converter/lib/converter/register"
 )
 
 const Minutes = "urn:infai:ses:characteristic:b36eee5d-52f0-4476-a6f7-6dd03b24e0f8"
@@ -45,7 +46,7 @@ func init() {
 			msAsFloat = ms
 		default:
 			debug.PrintStack()
-			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
 		}
 		return msAsFloat / 60.0 / 1000.0, nil
@@ -65,7 +66,7 @@ func init() {
 			minutesAsFloat = ms
 		default:
 			debug.PrintStack()
-			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
 		}
 		return minutesAsFloat * 60.0 * 1000.0, nil

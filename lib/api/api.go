@@ -17,25 +17,27 @@
 package api
 
 import (
+	"log"
+	"log/slog"
+	"net/http"
+	"reflect"
+	"runtime"
+
 	"github.com/SENERGY-Platform/converter/lib/api/util"
 	"github.com/SENERGY-Platform/converter/lib/converter"
 	"github.com/SENERGY-Platform/service-commons/pkg/accesslog"
 	"github.com/julienschmidt/httprouter"
-	"log"
-	"net/http"
-	"reflect"
-	"runtime"
 )
 
 var endpoints = []func(router *httprouter.Router, converter *converter.Converter){}
 
 func Start(port string, converter *converter.Converter) (srv *http.Server, err error) {
-	log.Println("start api")
+	slog.Info("start api")
 	router := GetRouter(converter)
-	log.Println("add logging and cors")
+	slog.Info("add logging and cors")
 	corsHandler := util.NewCors(router)
 	logger := accesslog.New(corsHandler)
-	log.Println("listen on port ", port)
+	slog.Info("listen", "port", port)
 	srv = &http.Server{Addr: ":" + port, Handler: logger}
 	go func() { log.Println(srv.ListenAndServe()) }()
 	return srv, nil
@@ -44,7 +46,7 @@ func Start(port string, converter *converter.Converter) (srv *http.Server, err e
 func GetRouter(converter *converter.Converter) (router *httprouter.Router) {
 	router = httprouter.New()
 	for _, e := range endpoints {
-		log.Println("add endpoints: " + runtime.FuncForPC(reflect.ValueOf(e).Pointer()).Name())
+		slog.Info("add endpoints: " + runtime.FuncForPC(reflect.ValueOf(e).Pointer()).Name())
 		e(router, converter)
 	}
 	return

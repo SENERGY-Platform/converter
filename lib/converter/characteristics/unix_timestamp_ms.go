@@ -18,12 +18,13 @@ package characteristics
 
 import (
 	"errors"
-	"github.com/SENERGY-Platform/converter/lib/converter/register"
-	"log"
+	"log/slog"
 	"reflect"
 	"runtime/debug"
 	"strconv"
 	"time"
+
+	"github.com/SENERGY-Platform/converter/lib/converter/register"
 )
 
 const UnixMilliSeconds = "urn:infai:ses:characteristic:64691f8d-4909-470f-a1fa-e977ebe28684"
@@ -34,13 +35,13 @@ func init() {
 	register.Add(IsoTimestamp, UnixMilliSeconds, register.NoLosses, func(in interface{}) (out interface{}, err error) {
 		iso, ok := in.(string)
 		if !ok {
-			log.Println("ERROR: conceptToCharacteristic", UnixMilliSecondsName, reflect.TypeOf(in).String(), in)
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
 		}
 		t, err := time.Parse(time.RFC3339, iso)
 		if err != nil {
 			debug.PrintStack()
-			log.Println("ERROR: ", err)
+			slog.Info("unable to parse time", "error", err)
 			return nil, err
 		}
 		return t.UnixMilli(), nil
@@ -62,12 +63,12 @@ func init() {
 			milliseconds, err = strconv.ParseInt(m, 10, 64)
 			if err != nil {
 				debug.PrintStack()
-				log.Println("ERROR: ", err)
+				slog.Info("unable to parse int", "error", err)
 				return nil, err
 			}
 		default:
 			debug.PrintStack()
-			log.Println("ERROR: characteristicToConcept", UnixMilliSecondsName, reflect.TypeOf(in).String(), in)
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
 		}
 		return time.UnixMilli(milliseconds).Format(time.RFC3339), nil
@@ -90,12 +91,12 @@ func init() {
 			milliseconds, err = strconv.ParseInt(s, 10, 64)
 			if err != nil {
 				debug.PrintStack()
-				log.Println("ERROR: ", err)
+				slog.Info("unable to parse int", "error", err)
 				return nil, err
 			}
 		default:
 			debug.PrintStack()
-			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
 		}
 		return milliseconds * 1000000, nil

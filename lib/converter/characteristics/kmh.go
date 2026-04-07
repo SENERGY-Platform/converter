@@ -18,10 +18,11 @@ package characteristics
 
 import (
 	"errors"
-	"github.com/SENERGY-Platform/converter/lib/converter/register"
-	"log"
+	"log/slog"
 	"reflect"
 	"runtime/debug"
+
+	"github.com/SENERGY-Platform/converter/lib/converter/register"
 )
 
 const Kmh = "urn:infai:ses:characteristic:becfc22a-7f24-44df-9a46-45acebc56d00"
@@ -45,7 +46,7 @@ func init() {
 			msAsFloat = ms
 		default:
 			debug.PrintStack()
-			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
 		}
 		return msAsFloat * 3.6, nil
@@ -66,7 +67,7 @@ func init() {
 			kmhAsFloat = kmh
 		default:
 			debug.PrintStack()
-			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
 		}
 		return kmhAsFloat / 3.6, nil

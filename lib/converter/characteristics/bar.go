@@ -18,10 +18,11 @@ package characteristics
 
 import (
 	"errors"
-	"github.com/SENERGY-Platform/converter/lib/converter/register"
-	"log"
+	"log/slog"
 	"reflect"
 	"runtime/debug"
+
+	"github.com/SENERGY-Platform/converter/lib/converter/register"
 )
 
 const Bar = "urn:infai:ses:characteristic:2871c1c4-1c8c-4169-81f6-fb5313df08b1"
@@ -45,7 +46,7 @@ func init() {
 			return float64(hpa / 1000.0), nil
 		default:
 			debug.PrintStack()
-			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
 		}
 	})
@@ -64,7 +65,7 @@ func init() {
 			return float64(bar * 1000.0), nil
 		default:
 			debug.PrintStack()
-			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
 		}
 	})

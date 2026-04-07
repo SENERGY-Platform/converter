@@ -18,10 +18,11 @@ package api
 
 import (
 	"encoding/json"
+	"log/slog"
+	"net/http"
+
 	"github.com/SENERGY-Platform/converter/lib/converter"
 	"github.com/julienschmidt/httprouter"
-	"log"
-	"net/http"
 )
 
 func init() {
@@ -43,14 +44,14 @@ func ConversionsEndpoint(router *httprouter.Router, converter *converter.Convert
 		}
 		out, err := converter.Cast(in, from, to)
 		if err != nil {
-			log.Println("ERROR:", err.Error(), "\n", from, to, in)
+			slog.Error("unable to cast", "from", from, "to", to, "input", in, "error", err)
 			http.Error(writer, err.Error(), http.StatusBadRequest)
 			return
 		}
 		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
 		err = json.NewEncoder(writer).Encode(out)
 		if err != nil {
-			log.Println("ERROR: unable to encode response", err)
+			slog.Error("unable to encode response", "error", err)
 		}
 	})
 
@@ -65,14 +66,14 @@ func ConversionsEndpoint(router *httprouter.Router, converter *converter.Convert
 		}
 		out, err := converter.Cast(in, from, to)
 		if err != nil {
-			log.Println("ERROR:", err.Error(), "\n", from, to, in)
+			slog.Error("unable to cast", "from", from, "to", to, "input", in, "error", err)
 			http.Error(writer, err.Error(), http.StatusBadRequest)
 			return
 		}
 		writer.Header().Set("Content-Type", "application/json; charset=utf-8")
 		err = json.NewEncoder(writer).Encode(out)
 		if err != nil {
-			log.Println("ERROR: unable to encode response", err)
+			slog.Error("unable to encode response", "error", err)
 		}
 	})
 

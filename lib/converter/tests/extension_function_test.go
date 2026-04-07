@@ -18,11 +18,12 @@ package converter
 
 import (
 	"fmt"
+	"reflect"
+	"testing"
+
 	"github.com/SENERGY-Platform/converter/lib/converter"
 	"github.com/SENERGY-Platform/converter/lib/converter/characteristics"
 	"github.com/SENERGY-Platform/models/go/models"
-	"reflect"
-	"testing"
 )
 
 func TestSNRGY3026(t *testing.T) {
@@ -375,10 +376,10 @@ func TestExtensionFunctions(t *testing.T) {
 	})
 }
 
-func ExampleNtoa() {
+func TestNtoa(t *testing.T) {
 	c, err := converter.New()
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		t.Error(err)
 		return
 	}
 	out, err := c.CastWithExtension(42.0, "foo", "bar", []models.ConverterExtension{
@@ -391,18 +392,20 @@ func ExampleNtoa() {
 		},
 	})
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		t.Error(err)
 		return
 	}
-	fmt.Println(out)
-	//output:
-	//true
+	outBool, ok := out.(bool)
+	if !ok || !outBool {
+		t.Error(out)
+		return
+	}
 }
 
-func ExampleAtoiNtoa() {
+func TestAtoiNtoa(t *testing.T) {
 	c, err := converter.New()
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		t.Error(err)
 		return
 	}
 	out, err := c.CastWithExtension(42.0, "foo", "bar", []models.ConverterExtension{
@@ -415,23 +418,23 @@ func ExampleAtoiNtoa() {
 		},
 	})
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		t.Error(err)
 		return
 	}
-	fmt.Println(out)
-	//output:
-	//42
+	if fmt.Sprint(out) != "42" {
+		t.Error(out)
+	}
 }
 
-func ExampleComplexExpression() {
+func TestComplexExpression(t *testing.T) {
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println("PANIC:", r)
+			t.Error(r)
 		}
 	}()
 	c, err := converter.New()
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		t.Error(err)
 		return
 	}
 
@@ -447,10 +450,12 @@ func ExampleComplexExpression() {
 		},
 	})
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		t.Error(err)
 		return
 	}
-	fmt.Println(out1)
+	if fmt.Sprint(out1) != "10:38" {
+		t.Error(out1)
+	}
 
 	out2, err := c.CastWithExtension(68, "foo", "bar", []models.ConverterExtension{
 		{
@@ -462,26 +467,23 @@ func ExampleComplexExpression() {
 		},
 	})
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		t.Error(err)
 		return
 	}
-	fmt.Println(out2)
-
-	//output:
-	// 10:38
-	// 01:08
-
+	if fmt.Sprint(out2) != "01:08" {
+		t.Error(out1)
+	}
 }
 
-func ExampleStructExpression() {
+func TestStructExpression(t *testing.T) {
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println("PANIC:", r)
+			t.Error(r)
 		}
 	}()
 	c, err := converter.New()
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		t.Error(err)
 		return
 	}
 
@@ -497,14 +499,12 @@ func ExampleStructExpression() {
 		},
 	})
 	if err != nil {
-		fmt.Println("ERROR:", err)
+		t.Error(err)
 		return
 	}
-	fmt.Println(out1)
 
-	//output:
-	// map[bar:43]
-
+	if fmt.Sprint(out1) != `map[bar:43]` {
+	}
 }
 
 func TestMapGet(t *testing.T) {

@@ -18,10 +18,12 @@ package characteristics
 
 import (
 	"errors"
+	"log/slog"
+	"reflect"
+	"runtime/debug"
+
 	"github.com/SENERGY-Platform/converter/lib/converter/register"
 	"github.com/lucasb-eyer/go-colorful"
-	"log"
-	"runtime/debug"
 )
 
 const Hsb = "urn:infai:ses:characteristic:64928e9f-98ca-42bb-a1e5-adf2a760a2f9"
@@ -50,8 +52,8 @@ func init() {
 	register.Add(Hsb, Hex, register.RoundingLoss, func(in interface{}) (out interface{}, err error) {
 		hsvMap, ok := in.(map[string]interface{})
 		if !ok {
-			log.Println(in)
 			debug.PrintStack()
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value as map[string]interface{}")
 		}
 		h, ok := hsvMap["h"]

@@ -18,10 +18,11 @@ package characteristics
 
 import (
 	"errors"
-	"github.com/SENERGY-Platform/converter/lib/converter/register"
-	"log"
+	"log/slog"
 	"reflect"
 	"runtime/debug"
+
+	"github.com/SENERGY-Platform/converter/lib/converter/register"
 )
 
 const OnOff = "urn:infai:ses:characteristic:7621686a-56bc-402d-b4cc-5b266d39736f"
@@ -33,7 +34,7 @@ func init() {
 		b, ok := in.(bool)
 		if !ok {
 			debug.PrintStack()
-			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value as boolean; input type is " + reflect.TypeOf(in).String())
 		}
 		if b {

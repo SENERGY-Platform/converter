@@ -18,11 +18,12 @@ package characteristics
 
 import (
 	"errors"
-	"github.com/SENERGY-Platform/converter/lib/converter/register"
-	"log"
+	"log/slog"
 	"reflect"
 	"runtime/debug"
 	"strings"
+
+	"github.com/SENERGY-Platform/converter/lib/converter/register"
 )
 
 const AnyClear = "urn:infai:ses:characteristic:8e520c73-7ee1-4a4b-954b-1c7c55139e27"
@@ -33,8 +34,7 @@ func init() {
 	register.Add(Boolean, AnyClear, register.NoLosses, func(in interface{}) (out interface{}, err error) {
 		b, ok := in.(bool)
 		if !ok {
-			debug.PrintStack()
-			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
+			slog.Info("unable to interpret value as boolean", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value as boolean; input type is " + reflect.TypeOf(in).String())
 		}
 		if b {

@@ -18,10 +18,12 @@ package characteristics
 
 import (
 	"errors"
+	"log/slog"
+	"reflect"
+	"runtime/debug"
+
 	"github.com/SENERGY-Platform/converter/lib/converter/register"
 	"gopkg.in/go-playground/colors.v1"
-	"log"
-	"runtime/debug"
 )
 
 const ExampleBrightness = "example_brightness"
@@ -49,7 +51,7 @@ func init() {
 	register.Add(ExampleRgb, ExampleHex, 10000, func(in interface{}) (concept interface{}, err error) {
 		rgbMap, ok := in.(map[string]interface{})
 		if !ok {
-			log.Println(in)
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			debug.PrintStack()
 			return nil, errors.New("unable to interpret value as map[string]interface{}")
 		}

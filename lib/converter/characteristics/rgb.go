@@ -18,11 +18,13 @@ package characteristics
 
 import (
 	"errors"
-	"github.com/SENERGY-Platform/converter/lib/converter/register"
-	"gopkg.in/go-playground/colors.v1"
-	"log"
+	"log/slog"
+	"reflect"
 	"runtime/debug"
 	"strings"
+
+	"github.com/SENERGY-Platform/converter/lib/converter/register"
+	"gopkg.in/go-playground/colors.v1"
 )
 
 const Rgb = "urn:infai:ses:characteristic:5b4eea52-e8e5-4e80-9455-0382f81a1b43"
@@ -54,8 +56,8 @@ func init() {
 	register.Add(Rgb, Hex, register.NoLosses, func(in interface{}) (out interface{}, err error) {
 		rgbMap, ok := in.(map[string]interface{})
 		if !ok {
-			log.Println(in)
 			debug.PrintStack()
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value as map[string]interface{}")
 		}
 		r, ok := rgbMap["r"]

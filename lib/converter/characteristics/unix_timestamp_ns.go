@@ -18,12 +18,13 @@ package characteristics
 
 import (
 	"errors"
-	"github.com/SENERGY-Platform/converter/lib/converter/register"
-	"log"
+	"log/slog"
 	"reflect"
 	"runtime/debug"
 	"strconv"
 	"time"
+
+	"github.com/SENERGY-Platform/converter/lib/converter/register"
 )
 
 const UnixNanoSeconds = "urn:infai:ses:characteristic:c7dfcb86-2733-4917-a5ca-0a150a458eed"
@@ -35,13 +36,13 @@ func init() {
 	register.Add(IsoTimestamp, UnixNanoSeconds, register.NoLosses, func(in interface{}) (out interface{}, err error) {
 		iso, ok := in.(string)
 		if !ok {
-			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
 		}
 		t, err := time.Parse(time.RFC3339, iso)
 		if err != nil {
 			debug.PrintStack()
-			log.Println("ERROR: ", err)
+			slog.Info("unable to parse time", "error", err)
 			return nil, err
 		}
 		return t.UnixNano(), nil
@@ -63,12 +64,12 @@ func init() {
 			nanoseconds, err = strconv.ParseInt(m, 10, 64)
 			if err != nil {
 				debug.PrintStack()
-				log.Println("ERROR: ", err)
+				slog.Info("unable to parse int", "error", err)
 				return nil, err
 			}
 		default:
 			debug.PrintStack()
-			log.Println("ERROR: ", reflect.TypeOf(in).String(), in)
+			slog.Info("unable to interpret value", "input-type", reflect.TypeOf(in).String(), "input-value", in)
 			return nil, errors.New("unable to interpret value; input type is " + reflect.TypeOf(in).String())
 		}
 		return time.Unix(0, nanoseconds).Format(time.RFC3339), nil
