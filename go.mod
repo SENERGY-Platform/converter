@@ -7,7 +7,7 @@ require (
 	github.com/RyanCarrier/dijkstra v1.4.0
 	github.com/SENERGY-Platform/go-service-base/struct-logger v0.6.0
 	github.com/SENERGY-Platform/models/go v0.0.0-20240627082833-157bd627a94f
-	github.com/SENERGY-Platform/service-commons v0.0.0-20260821114734-3e4578ac2358
+	github.com/SENERGY-Platform/service-commons v0.0.0-20261016083822-dec36fce00ad
 	github.com/emicklei/dot v1.6.2
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/lucasb-eyer/go-colorful v1.2.0
