@@ -38,4 +38,4 @@ updates:
       interval: monthly
     groups:
       actions:
-        patterns: ["*"]
+        update-types: [minor, patch]
